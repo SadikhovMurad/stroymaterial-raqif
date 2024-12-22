@@ -1,0 +1,6 @@
+@stroymaterial_raqif_HostAddress = http://localhost:5160
+
+GET {{stroymaterial_raqif_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

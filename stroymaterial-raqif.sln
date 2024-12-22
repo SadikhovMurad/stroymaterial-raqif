@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stroymaterial-raqif", "stroymaterial-raqif\stroymaterial-raqif.csproj", "{724174FE-1BBB-44B9-97A2-BD2740E97BCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{724174FE-1BBB-44B9-97A2-BD2740E97BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724174FE-1BBB-44B9-97A2-BD2740E97BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724174FE-1BBB-44B9-97A2-BD2740E97BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724174FE-1BBB-44B9-97A2-BD2740E97BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E4D8B11-9F36-4936-9821-F9CC7E7257E7}
+	EndGlobalSection
+EndGlobal
