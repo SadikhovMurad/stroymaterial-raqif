@@ -1,3 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using stroymaterial_raqif.Identity;
+using IdentityDbContext = stroymaterial_raqif.Identity.IdentityDbContext;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +12,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
+
+    @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+
+    ));
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<IdentityDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -18,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
