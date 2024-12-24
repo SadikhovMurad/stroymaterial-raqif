@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Utilities.Security.JWT
+namespace stroymaterial_raqif.Identity.JWT
 {
     public interface ITokenHelper
     {
+        AccessToken CreateToken(User user, List<string> roles);
     }
 }

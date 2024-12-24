@@ -1,7 +1,11 @@
+using Core.Utilities.Security.Encyption;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using stroymaterial_raqif.Identity;
+using stroymaterial_raqif.Identity.JWT;
 using IdentityDbContext = stroymaterial_raqif.Identity.IdentityDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<ITokenHelper,JWTHelper>();
 
 builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
 
@@ -23,6 +27,27 @@ builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<IdentityDbContext>()
     .AddDefaultTokenProviders();
+
+
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<stroymaterial_raqif.Identity.JWT.TokenOptions>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidIssuer = tokenOptions.Issuer,
+            ValidAudience = tokenOptions.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+        };
+    });
+
+
+
 
 var app = builder.Build();
 
@@ -35,7 +60,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

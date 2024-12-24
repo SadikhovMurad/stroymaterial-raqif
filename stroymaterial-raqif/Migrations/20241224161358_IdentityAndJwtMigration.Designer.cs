@@ -12,8 +12,8 @@ using stroymaterial_raqif.Identity;
 namespace stroymaterial_raqif.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20241223022946_IdentityMigration")]
-    partial class IdentityMigration
+    [Migration("20241224161358_IdentityAndJwtMigration")]
+    partial class IdentityAndJwtMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

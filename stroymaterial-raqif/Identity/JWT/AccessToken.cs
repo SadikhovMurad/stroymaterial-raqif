@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Utilities.Security.JWT
+namespace stroymaterial_raqif.Identity.JWT
 {
     public class AccessToken
     {

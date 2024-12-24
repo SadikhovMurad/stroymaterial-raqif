@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataAccess\" />
     <Folder Include="Utilities\Results\" />
     <Folder Include="Utilities\IoC\" />
     <Folder Include="Utilities\Security\Hashing\" />

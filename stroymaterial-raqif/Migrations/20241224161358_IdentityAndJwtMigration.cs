@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace stroymaterial_raqif.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityMigration : Migration
+    public partial class IdentityAndJwtMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

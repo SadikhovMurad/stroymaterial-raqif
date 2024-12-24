@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using stroymaterial_raqif.Identity;
+using stroymaterial_raqif.Identity.JWT;
 using stroymaterial_raqif.Models;
 
 namespace stroymaterial_raqif.Controllers
@@ -11,10 +12,12 @@ namespace stroymaterial_raqif.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private ITokenHelper _tokenHelper;
 
-        public AuthController(UserManager<User> userManager)
+        public AuthController(UserManager<User> userManager, ITokenHelper tokenHelper)
         {
             _userManager = userManager;
+            _tokenHelper = tokenHelper;
         }
 
         [HttpPost("register")]
@@ -48,8 +51,30 @@ namespace stroymaterial_raqif.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 return Unauthorized(new { Message = "Invalid credentials" });
+            var roles = new List<string> { "Admin", "User" };
+            var accessToken = _tokenHelper.CreateToken(user,roles);
 
-            return Ok(new { Message = "Login successful" });
+            return Ok(new { Message = "Login successful",Token = accessToken.Token });
+        }
+
+
+
+        [HttpGet("getAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            List<GetAllUsersModel> users = new List<GetAllUsersModel>();
+            foreach(var user in _userManager.Users)
+            {
+                var userModel = new GetAllUsersModel()
+                {
+                    Id = user.Id,
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    Email = user.Email
+                };
+                users.Add(userModel);
+            }
+            return Ok(users);
         }
     }
 }
