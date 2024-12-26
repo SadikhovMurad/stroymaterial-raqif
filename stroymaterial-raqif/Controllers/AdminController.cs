@@ -5,12 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace stroymaterial_raqif.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     [ApiController]
     public class AdminController : ControllerBase
     {
-        [HttpGet]
-        [Route("get")]
+        [HttpGet("HelloMessage")]
         public async Task<IActionResult> Get()
         {
             return Ok(new { Message = "Salam Admin!" });

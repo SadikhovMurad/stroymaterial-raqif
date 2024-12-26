@@ -51,8 +51,8 @@ namespace stroymaterial_raqif.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 return Unauthorized(new { Message = "Invalid credentials" });
-            var roles = new List<string> { "Admin", "User" };
-            var accessToken = _tokenHelper.CreateToken(user,roles);
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _tokenHelper.CreateToken(user,roles.ToList());
 
             return Ok(new { Message = "Login successful",Token = accessToken.Token });
         }
@@ -75,6 +75,20 @@ namespace stroymaterial_raqif.Controllers
                 users.Add(userModel);
             }
             return Ok(users);
+        }
+
+
+        [HttpGet("getRoles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var user = await _userManager.FindByEmailAsync("murad@gmail.com");
+            var role = await  _userManager.GetRolesAsync(user);
+            string roleName="";
+            foreach (var roleModel in role)
+            {
+                roleName = roleModel;
+            }
+            return Ok(roleName);
         }
     }
 }
