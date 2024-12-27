@@ -1,24 +1,21 @@
-﻿    using Core.Entity.Abstract;
+﻿using Core.Entity.Abstract;
+using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.Concrete
+namespace Entity.DtoS
 {
-    public class Order : IEntity
+    public class OrderDto : IDto
     {
-        public Guid Id { get; set; }
         public Guid ProductId { get; set; }
-        public string ProductName { get; set; }
-        public DateTime OrderDate { get; set; }
         public string Location { get; set; }
         public string UserId { get; set; }
         public string PhoneNumber { get; set; }
-        public bool paymentMethodIsCart { get; set; }
+        public bool isCart { get; set; }
         public List<Notification> Notifications { get; set; }
-        public decimal TotalAmount { get; set; }
-        public bool IsSuccess { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

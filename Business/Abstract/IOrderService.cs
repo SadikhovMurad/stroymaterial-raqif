@@ -1,0 +1,22 @@
+﻿using Core.Utilities.Results;
+using Entity.Concrete;
+using Entity.DtoS;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Business.Abstract
+{
+    public interface IOrderService
+    {
+        IDataResult<List<Order>> GetAll();
+        IDataResult<List<Notification>> GetAllNotificationByOrderId(Guid orderId);
+        IDataResult<Order> GetById(Guid id);
+        IDataResult<Order> GetByFilter<T>(string propertyName, T value);
+        IResult Add(OrderDto orderDto);
+        IResult Update(Guid id, Order? order);
+        IResult Delete(Guid id);
+    }
+}

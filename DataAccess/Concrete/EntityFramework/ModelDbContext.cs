@@ -22,10 +22,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Company> Company { get; set; }
-
-
-
-
-
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<OrderAssignment> OrderAssignments { get; set; }
     }
 }

@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
-    public class OrderHistory : IEntity
+    public class Notification : IEntity
     {
         public int Id { get; set; }
+        public string Content { get; set; }
         public Guid OrderId { get; set; }
-        public string UserId { get; set; }
-        public int CoruierId { get; set; }
-        public bool status { get; set; }
     }
 }

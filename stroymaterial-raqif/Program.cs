@@ -1,3 +1,6 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Security.Encyption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +20,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(builder =>
+    {
+        builder.RegisterModule(new AutofacBusinessModule());
+    });
 builder.Services.AddScoped<ITokenHelper,JWTHelper>();
 
 builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
@@ -73,6 +81,9 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("Admin");
     });
 });
+
+
+
 
 
 
