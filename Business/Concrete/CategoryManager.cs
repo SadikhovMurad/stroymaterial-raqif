@@ -58,15 +58,16 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Category>>(categoryDal.GetAll(), Messages.CategoryListed);
         }
 
-        public IDataResult<CategoryWithSubcategoriesDto> GetAllCategoryWithSubcategories(string name)
+        public IDataResult<Category> GetAllCategoryWithSubcategories(int id)
         {
-            var category=categoryDal.Get(c=>c.Name == name);
+            var category=categoryDal.Get(c=>c.Id == id);
             CategoryWithSubcategoriesDto dto = new CategoryWithSubcategoriesDto()
             {
                 CategoryName = category.Name,
                 SubCategories = category.SubCategories
             };
-            return new SuccessDataResult<CategoryWithSubcategoriesDto>(dto, Messages.CategoryListed);
+            var resultCategory = _mapper.Map<Category>(dto);
+            return new SuccessDataResult<Category>(resultCategory, Messages.CategoryListed);
         }
 
         public IDataResult<Category> GetById(int id)

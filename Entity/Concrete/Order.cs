@@ -17,7 +17,7 @@ namespace Entity.Concrete
         public string UserId { get; set; }
         public string PhoneNumber { get; set; }
         public bool paymentMethodIsCart { get; set; }
-        public List<Notification> Notifications { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
         public decimal TotalAmount { get; set; }
         public bool IsSuccess { get; set; }
     }

@@ -15,8 +15,8 @@ namespace Business.Abstract
         IDataResult<List<OrderHistory>> GetAllOrdersByCoruier(int coruierId);
         IDataResult<Employee> GetById(int id);
         IDataResult<Employee> GetByFilter<T>(string propertyName,T value);
-        IResult Add(Employee categoryDto);
-        IResult Update(int id, Employee? categoryDto);
+        IResult Add(Employee employee);
+        IResult Update(int id, Employee? employee);
         IResult Delete(int id);
     }
 }

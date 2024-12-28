@@ -11,6 +11,6 @@ namespace Entity.DtoS
     public class CategoryWithSubcategoriesDto : IDto
     {
         public string CategoryName { get; set; }
-        public List<SubCategory> SubCategories { get; set; }
+        public ICollection<SubCategory> SubCategories { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Business.AutoMapper;
 using Business.DependencyResolvers.Autofac;
 using Core.Utilities.Security.Encyption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +26,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     {
         builder.RegisterModule(new AutofacBusinessModule());
     });
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<ITokenHelper,JWTHelper>();
 
 builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(

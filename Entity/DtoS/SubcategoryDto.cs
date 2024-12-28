@@ -1,4 +1,5 @@
 ﻿using Core.Entity.Abstract;
+using Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace Entity.DtoS
     {
         public string Name { get; set; }
         public int CategoryId { get; set; }
-
 
     }
 }

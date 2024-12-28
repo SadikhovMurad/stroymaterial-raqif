@@ -19,12 +19,14 @@ namespace Business.Concrete
     public class SubcategoryManager : ISubcategoryService
     {
         private readonly ISubcategoryDal _subCategoryDal;
+        private readonly ICategoryDal _categoryDal;
         private readonly IMapper _mapper;
 
-        public SubcategoryManager(ISubcategoryDal subCategoryDal, IMapper mapper)
+        public SubcategoryManager(ISubcategoryDal subCategoryDal, IMapper mapper, ICategoryDal categoryDal)
         {
             _subCategoryDal = subCategoryDal;
             _mapper = mapper;
+            _categoryDal = categoryDal;
         }
 
         [ValidationAspect(typeof(SubcategoryValidator))]
@@ -35,7 +37,14 @@ namespace Business.Concrete
             {
                 return result;
             }
+            var category = _categoryDal.Get(c => c.Id == subcategoryDto.CategoryId);
             var subCategory = _mapper.Map<SubCategory>(subcategoryDto);
+            subCategory.Category = category;
+            if(category.SubCategories == null)
+            {
+                category.SubCategories = new List<SubCategory>();
+            }
+            category.SubCategories.Add(subCategory);
             _subCategoryDal.Add(subCategory);
             return new SuccessResult(Messages.SubCategoryAdded);
         }
@@ -73,7 +82,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(SubcategoryValidator))]
-        public IResult Update(int id, SubCategory? subCategory)
+        public IResult Update(SubCategory? subCategory)
         {
             var result = BusinessRules.Run(CheckIfSubCategoryNameExistForUpdate(subCategory.Name, subCategory.Id));
             if (result != null)

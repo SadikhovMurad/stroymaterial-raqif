@@ -12,7 +12,7 @@ namespace Business.Abstract
     public interface ICategoryService
     {
         IDataResult<List<Category>> GetAll();
-        IDataResult<CategoryWithSubcategoriesDto> GetAllCategoryWithSubcategories(string name);
+        IDataResult<Category> GetAllCategoryWithSubcategories(int id);
         IDataResult<Category> GetById(int id);
         IDataResult<Category> GetByName(string name);
         IResult Add(CategoryDto categoryDto);

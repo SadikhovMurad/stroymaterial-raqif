@@ -4,6 +4,7 @@ using DataAccess.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ModelDbContext))]
-    partial class ModelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241228084231_Models2Migration")]
+    partial class Models2Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,13 +341,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entity.Concrete.SubCategory", b =>
                 {
-                    b.HasOne("Entity.Concrete.Category", "Category")
+                    b.HasOne("Entity.Concrete.Category", null)
                         .WithMany("SubCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Entity.Concrete.Category", b =>

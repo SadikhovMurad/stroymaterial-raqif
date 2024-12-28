@@ -25,5 +25,13 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<OrderAssignment> OrderAssignments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SubCategory>()
+                .HasOne(sc => sc.Category)
+                .WithMany(c => c.SubCategories)
+                .HasForeignKey(sc => sc.CategoryId);
+        }
     }
 }
