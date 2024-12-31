@@ -20,12 +20,14 @@ namespace Business.Concrete
     public class CategoryManager : ICategoryService
     {
         private readonly ICategoryDal categoryDal;
+        private readonly ISubcategoryDal subcategoryDal;
         private readonly IMapper _mapper;
 
-        public CategoryManager(ICategoryDal categoryDal, IMapper mapper)
+        public CategoryManager(ICategoryDal categoryDal, IMapper mapper, ISubcategoryDal subcategoryDal)
         {
             this.categoryDal = categoryDal;
             _mapper = mapper;
+            this.subcategoryDal = subcategoryDal;
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
@@ -40,6 +42,15 @@ namespace Business.Concrete
 
             categoryDal.Add(category);
             return new SuccessResult(Messages.CategoryAdded);
+        }
+
+        public IResult AddSubcategory(int categoryId, SubCategory subCategory)
+        {
+            var category = categoryDal.Get(c => c.Id == categoryId);
+            category.SubCategories = new List<SubCategory>();
+            category.SubCategories.Add(subCategory);
+            subcategoryDal.Add(subCategory);
+            return new SuccessResult(Messages.SubCategoryAdded);
         }
 
         public IResult Delete(int id)
@@ -58,16 +69,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Category>>(categoryDal.GetAll(), Messages.CategoryListed);
         }
 
-        public IDataResult<Category> GetAllCategoryWithSubcategories(int id)
+        public IDataResult<List<CategoryWithSubcategoriesDto>> GetAllCategoryWithSubcategories()
         {
-            var category=categoryDal.Get(c=>c.Id == id);
-            CategoryWithSubcategoriesDto dto = new CategoryWithSubcategoriesDto()
-            {
-                CategoryName = category.Name,
-                SubCategories = category.SubCategories
-            };
-            var resultCategory = _mapper.Map<Category>(dto);
-            return new SuccessDataResult<Category>(resultCategory, Messages.CategoryListed);
+            return new SuccessDataResult<List<CategoryWithSubcategoriesDto>>(categoryDal.categoryWithSubcategories(),Messages.CategoryListedWithSubcategories);
         }
 
         public IDataResult<Category> GetById(int id)

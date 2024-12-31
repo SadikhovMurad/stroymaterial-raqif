@@ -20,7 +20,7 @@ namespace stroymaterial_raqif.Controllers
         [HttpGet("AllSubcategories")]
         public IActionResult GetAllSubcategory()
         {
-            var result = _subcategoryService.GetAll();
+            var result = _subcategoryService.GetSubcategoryWithCategoryName();
             if (result.Success)
             {
                 return Ok(result);

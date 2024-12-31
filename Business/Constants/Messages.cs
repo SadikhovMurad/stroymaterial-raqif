@@ -22,6 +22,7 @@ namespace Business.Constants
 
 
         public static string CategoryListed = "Kateqoriya uğurla Listələndi";
+        public static string CategoryListedWithSubcategories = "Kateqoriya Alt kateqoriyalari ile birge listələndi";
         public static string CategoryNameExisted = "Bu adda kateqoriya hal-hazırda mövcuddur";
         public static string CategoryAdded = "Kateqoriya əlavə olundu";
         public static string CategoryUpdated = "Kateqoriya yeniləndi";
@@ -30,6 +31,8 @@ namespace Business.Constants
         public static string IdNullCategory = "Id daxil edilməyib";
 
         public static string SubCategoryListed = "Alt Kateqoriya uğurla Listələndi";
+        public static string SubCategoriesListedWithBaseCategory = "Bütün Alt kateqoriyalar üst kateqoriyaları ilə birlikdə listələndi";
+        public static string SubCategoryListedWithBaseCategory = "Alt kateqoriya üst kateqoriya ilə birlikdə listələndi";
         public static string SubCategoryNameExisted = "Bu adda alt kateqoriya hal-hazırda mövcuddur";
         public static string SubCategoryAdded = "Alt Kateqoriya əlavə olundu";
         public static string SubCategoryUpdated = "Alt Kateqoriya yeniləndi";

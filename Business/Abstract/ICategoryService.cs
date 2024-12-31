@@ -12,7 +12,8 @@ namespace Business.Abstract
     public interface ICategoryService
     {
         IDataResult<List<Category>> GetAll();
-        IDataResult<Category> GetAllCategoryWithSubcategories(int id);
+        IDataResult<List<CategoryWithSubcategoriesDto>> GetAllCategoryWithSubcategories();
+        IResult AddSubcategory(int categoryId,SubCategory subCategory);
         IDataResult<Category> GetById(int id);
         IDataResult<Category> GetByName(string name);
         IResult Add(CategoryDto categoryDto);

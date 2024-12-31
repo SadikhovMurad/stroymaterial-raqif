@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.Constants;
+using Business.RelationshipHelper;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspect.Validation;
 using Core.Utilities.BusinessRules;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrete
 {
@@ -38,9 +40,12 @@ namespace Business.Concrete
                 return result;
             }
             var category = _categoryDal.Get(c => c.Id == subcategoryDto.CategoryId);
+            if (category == null)
+            {
+                return new ErrorResult("Kateqoriya tapilmadi");
+            }
             var subCategory = _mapper.Map<SubCategory>(subcategoryDto);
-            subCategory.Category = category;
-            if(category.SubCategories == null)
+            if (category.SubCategories == null)
             {
                 category.SubCategories = new List<SubCategory>();
             }
@@ -78,7 +83,7 @@ namespace Business.Concrete
 
         public IDataResult<List<SubcategoryWithCategoryDto>> GetSubcategoryWithCategoryName()
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<SubcategoryWithCategoryDto>>(_subCategoryDal.GetAllWithBaseCategory(), Messages.SubCategoriesListedWithBaseCategory);
         }
 
         [ValidationAspect(typeof(SubcategoryValidator))]

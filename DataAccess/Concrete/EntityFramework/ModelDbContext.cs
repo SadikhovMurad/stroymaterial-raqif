@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class ModelDbContext:DbContext
+    public class ModelDbContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,10 +28,44 @@ namespace DataAccess.Concrete.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<SubCategory>()
-                .HasOne(sc => sc.Category)
-                .WithMany(c => c.SubCategories)
-                .HasForeignKey(sc => sc.CategoryId);
+                .HasOne(p => p.Category)
+                .WithMany(b => b.SubCategories)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.SubCategory)
+                .WithMany(sc => sc.Products)
+                .HasForeignKey(p => p.SubCategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            modelBuilder.Entity<SubCategory>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
+
+
+
+
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<SubCategory>()
+            //    .HasOne(sc => sc.Category)
+            //    .WithMany(c => c.SubCategories)
+            //    .HasForeignKey(sc => sc.CategoryId);
         }
     }
 }

@@ -28,10 +28,10 @@ namespace stroymaterial_raqif.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("AllCategoriesWithSubcategories/{id}")]
-        public IActionResult GetCategoryWithSubcategories(int id) 
+        [HttpGet("AllCategoriesWithSubcategories")]
+        public IActionResult GetCategoryWithSubcategories() 
         {
-            var result = _categoryService.GetAllCategoryWithSubcategories(id);
+            var result = _categoryService.GetAllCategoryWithSubcategories();
             if (result.Success)
             {
                 return Ok(result);

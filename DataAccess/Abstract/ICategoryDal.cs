@@ -1,5 +1,7 @@
 ﻿using Core.DataAccess;
+using DataAccess.Concrete.EntityFramework;
 using Entity.Concrete;
+using Entity.DtoS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,6 @@ namespace DataAccess.Abstract
 {
     public interface ICategoryDal : IRepositoryBase<Category>
     {
-
+        List<CategoryWithSubcategoriesDto> categoryWithSubcategories();
     }
 }
