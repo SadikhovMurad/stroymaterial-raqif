@@ -43,18 +43,20 @@ namespace DataAccess.Concrete.EntityFramework
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.SubCategory)
                 .WithMany(sc => sc.Products)
-                .HasForeignKey(p => p.SubCategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(p => p.SubCategoryId);
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(p => p.CategoryId);
 
 
 
             modelBuilder.Entity<SubCategory>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Product>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 

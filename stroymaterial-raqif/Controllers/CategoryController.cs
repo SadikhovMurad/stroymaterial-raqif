@@ -1,12 +1,14 @@
 ﻿using Business.Abstract;
 using Entity.Concrete;
 using Entity.DtoS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace stroymaterial_raqif.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -18,6 +20,7 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpGet("AllCategories")]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAllCategories()
         {
             var result = _categoryService.GetAll();

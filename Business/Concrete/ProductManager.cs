@@ -20,12 +20,16 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         private readonly IProductDal productDal;
+        private readonly ICategoryDal categoryDal;
+        private readonly ISubcategoryDal subcategoryDal;
         private readonly IMapper _mapper;
 
-        public ProductManager(IProductDal productDal, IMapper mapper)
+        public ProductManager(IProductDal productDal, IMapper mapper, ICategoryDal categoryDal, ISubcategoryDal subcategoryDal)
         {
             this.productDal = productDal;
             _mapper = mapper;
+            this.categoryDal = categoryDal;
+            this.subcategoryDal = subcategoryDal;
         }
 
 
@@ -37,11 +41,25 @@ namespace Business.Concrete
             {
                 return result;
             }
+            var category = categoryDal.Get(c => c.Id == productDto.CategoryId);
+            var subcategory = subcategoryDal.Get(sc=>sc.Id == productDto.SubcategoryId);
+            if (category == null)
+            {
+                return new ErrorResult("Kateqoriya ve ya Alt kateqoriya tapilmadi");
+            }
             var product = _mapper.Map<Product>(productDto);
+            if (category.Products == null || subcategory.Products == null)
+            {
+                category.Products = new List<Product>();
+                subcategory.Products = new List<Product>();
+
+
+            }
+            category.Products.Add(product);
+            subcategory.Products.Add(product);
             productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
-
         public IResult Delete(Guid id)
         {
             var product = productDal.Get(x => x.Id == id);
@@ -52,44 +70,30 @@ namespace Business.Concrete
             productDal.Delete(product);
             return new SuccessResult(Messages.ProductRemoved);
         }
-
-        public IDataResult<List<Product>> GetAll()
+        public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAll()
         {
 
-            return new SuccessDataResult<List<Product>>(productDal.GetAll(), Messages.CategoryListed);
+            return new SuccessDataResult<List<ProductByCategoryOrSubcategoryDto>>(productDal.GetProductsByCategory(), Messages.ProductListed);
         }
 
-        public IDataResult<List<Product>> GetAllProductsByCategoryId(int categoryId)
+        public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsByCategoryId(int categoryId)
         {
-            return new SuccessDataResult<List<Product>>(productDal.GetAll(p => p.CategoryId == categoryId), Messages.ProductListedByCategoryId);
+            throw new NotImplementedException();
         }
 
-        public IDataResult<List<Product>> GetAllProductsByCategoryName(string categoryName)
+        public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsBySubcategoryId(int subcategoryId)
         {
-            return new SuccessDataResult<List<Product>>(productDal.GetAll(p => p.CategoryName == categoryName), Messages.ProductListedByCategoryId);
-
-        }
-
-        public IDataResult<List<Product>> GetAllProductsBySubcategoryId(int subcategoryId)
-        {
-            return new SuccessDataResult<List<Product>>(productDal.GetAll(p => p.SubCategoryId == subcategoryId), Messages.ProductListedBySubcategoryId);
-        }
-
-        public IDataResult<List<Product>> GetAllProductsBySubcategoryName(string subcategoryName)
-        {
-            return new SuccessDataResult<List<Product>>(productDal.GetAll(p => p.SubCategoryName == subcategoryName), Messages.ProductListedBySubcategoryId);
+            throw new NotImplementedException();
         }
 
         public IDataResult<List<Product>> GetByFilter<T>(string propertyName, T value)
         {
             throw new NotImplementedException();
         }
-
         public IDataResult<Product> GetById(Guid id)
         {
             return new SuccessDataResult<Product>(productDal.Get(p => p.Id == id), Messages.GetProductById);
         }
-
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Guid id, Product? product)
         {
