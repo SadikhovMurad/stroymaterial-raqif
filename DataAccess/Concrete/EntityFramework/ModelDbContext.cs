@@ -1,4 +1,6 @@
-﻿using Entity.Concrete;
+﻿using Core.Entity.Concrete;
+using Entity.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,11 +10,24 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class ModelDbContext : DbContext
+    public class ModelDbContext : IdentityDbContext<User>
     {
+
+        public ModelDbContext()
+        {
+             
+        }
+        public ModelDbContext(DbContextOptions<ModelDbContext> options)
+        : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            }
         }
 
 
@@ -20,6 +35,7 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -28,6 +44,8 @@ namespace DataAccess.Concrete.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelDbContext).Assembly);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
@@ -50,8 +68,6 @@ namespace DataAccess.Concrete.EntityFramework
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
 
-
-
             modelBuilder.Entity<SubCategory>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
@@ -60,14 +76,25 @@ namespace DataAccess.Concrete.EntityFramework
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Product) 
+                .WithMany()            
+                .HasForeignKey(o => o.ProductId)  
+                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany()
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Notification)
+                .WithOne(n => n.Order)
+                .HasForeignKey<Notification>(n => n.OrderId);
 
 
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<SubCategory>()
-            //    .HasOne(sc => sc.Category)
-            //    .WithMany(c => c.SubCategories)
-            //    .HasForeignKey(sc => sc.CategoryId);
         }
     }
 }

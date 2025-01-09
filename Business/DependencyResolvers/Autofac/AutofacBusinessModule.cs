@@ -47,8 +47,8 @@ namespace Business.DependencyResolvers.Autofac
             {
                 var config = new MapperConfiguration(cfg =>
                 {
-                    // Burada profillərinizi qeyd edin
-                    cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+                    // Burada yalnız lazım olan yığmaları əlavə edin
+                    cfg.AddMaps(typeof(CategoryManager).Assembly);
                 });
                 return config.CreateMapper();
             }).As<IMapper>().InstancePerLifetimeScope();

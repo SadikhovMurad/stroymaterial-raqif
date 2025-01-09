@@ -29,6 +29,7 @@ namespace stroymaterial_raqif.Controllers
             }
             return BadRequest(result);
         }
+
         [HttpPost("AddProduct")]
         public IActionResult AddProduct(ProductDto dto)
         {
@@ -39,11 +40,57 @@ namespace stroymaterial_raqif.Controllers
             }
             return BadRequest(result);
         }
-
-        [HttpGet("GetAllProductsByCategory")]
+        [HttpPost("AddQuantity/{id}/{count}")]
+        public IActionResult AddQuantity(Guid id,int count)
+        {
+            var result = _productService.AddStock(count,id);
+            if (result.Success) 
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("GetAllProductsByCategory/{id}")]
         public IActionResult GetAllProductsByCategoryId(int id) 
         {
-            return Ok();
+            var result = _productService.GetAllProductsByCategoryId(id);
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetAllProductBySubcategory/{id}")]
+        public IActionResult GetAllProductsBySubcategoryId(int id)
+        {
+            var result = _productService.GetAllProductsBySubcategoryId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("Delete/{id}")]
+        public IActionResult DeleteProduct(Guid id)
+        {
+            var result = _productService.Delete(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("Update/{id}")]
+        public IActionResult UpdateProduct(Guid id,Product product)
+        {
+            var result = _productService.Update(id,product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }

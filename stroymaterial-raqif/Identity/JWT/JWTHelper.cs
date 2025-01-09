@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Security.Encyption;
+﻿using Core.Entity.Concrete;
+using Core.Utilities.Security.Encyption;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using stroymaterial_raqif.Identity;

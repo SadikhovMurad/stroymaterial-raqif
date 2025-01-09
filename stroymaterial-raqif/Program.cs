@@ -2,7 +2,9 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.AutoMapper;
 using Business.DependencyResolvers.Autofac;
+using Core.Entity.Concrete;
 using Core.Utilities.Security.Encyption;
+using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -12,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using stroymaterial_raqif.Identity;
 using stroymaterial_raqif.Identity.JWT;
 using System.Text;
-using IdentityDbContext = stroymaterial_raqif.Identity.IdentityDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,14 +62,14 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<ITokenHelper,JWTHelper>();
 
-builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(
+builder.Services.AddDbContext<ModelDbContext>(options => options.UseSqlServer(
 
     @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
 
     ));
 
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<IdentityDbContext>()
+    .AddEntityFrameworkStores<ModelDbContext>()
     .AddDefaultTokenProviders();
 
 

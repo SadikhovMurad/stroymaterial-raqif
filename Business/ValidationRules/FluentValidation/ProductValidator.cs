@@ -18,7 +18,7 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(p => p.SubCategoryId).NotEmpty().WithMessage("Alt kateqoriyasi bildirilmelidir");
             RuleFor(p => p.Marka).NotEmpty().WithMessage("Marka adi bos qoyula bilmez");
             RuleFor(p => p.ImageUrl).NotEmpty().WithMessage("Wekil qoyulmalidir");
-
+            
         }
     }
 }

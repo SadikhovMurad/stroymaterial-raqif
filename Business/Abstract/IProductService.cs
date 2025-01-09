@@ -16,6 +16,7 @@ namespace Business.Abstract
         IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsBySubcategoryId(int subcategoryId);
         IDataResult<Product> GetById(Guid id);
         IDataResult<List<Product>> GetByFilter<T>(string propertyName,T value);
+        IResult AddStock(int count, Guid id);
         IResult Add(ProductDto productDto);
         IResult Update(Guid id, Product? product);
         IResult Delete(Guid id);

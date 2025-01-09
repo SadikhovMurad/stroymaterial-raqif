@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace stroymaterial_raqif.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -20,7 +19,6 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpGet("AllCategories")]
-        [Authorize(Roles = "Admin")]
         public IActionResult GetAllCategories()
         {
             var result = _categoryService.GetAll();
@@ -64,7 +62,7 @@ namespace stroymaterial_raqif.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("UpdateCategory")]
+        [HttpPost("UpdateCategory/{id}")]
         public IActionResult Update(int id, CategoryDto categorydto)
         {
             var result = _categoryService.Update(id, categorydto);

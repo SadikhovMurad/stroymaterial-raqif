@@ -12,5 +12,6 @@ namespace Entity.Concrete
         public int Id { get; set; }
         public string Content { get; set; }
         public Guid OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }

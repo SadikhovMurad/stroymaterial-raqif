@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,8 @@ namespace Business.Constants
         public static string SubCategoryDeleted = " Alt Kateqoriya silindi";
 
 
+
+        public static string ProductNotFound = "Mehsul tapilmadi";
         public static string ProductAdded = "Mehsul ugurla elave olundu";
         public static string ProductExists = "Bu mehsul hal hazirda sistemde movcuddur";
         public static string ProductListed = "Mehsullar ugurla siyahilandi";
@@ -49,6 +52,8 @@ namespace Business.Constants
         public static string ProductRemoved = "Mehsul ugurla silindi";
         public static string ProductUpdated = "Mehsul ugurla yenilendi";
         public static string ProductQuantityAdded = "Mehsulun sayi ugurla artirildi";
+
         
+
     }
 }

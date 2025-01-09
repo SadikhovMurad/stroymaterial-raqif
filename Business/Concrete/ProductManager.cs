@@ -60,6 +60,33 @@ namespace Business.Concrete
             productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
+        public IResult AddStock(int count, Guid id)
+        {
+            var product = productDal.Get(p=>p.Id == id);
+            if (product == null)
+            {
+                return new ErrorResult(Messages.ProductNotFound);
+            }
+            product.Quantity = product.Quantity + count;
+            var addedStockProduct = new Product()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                CategoryId = product.CategoryId,
+                Category = product.Category,
+                SubCategoryId = product.SubCategoryId,
+                SubCategory = product.SubCategory,
+                Marka = product.Marka,
+                SaleCount = product.SaleCount,
+                Quantity = product.Quantity + count,
+                hasStock = true,
+                Price = product.Price,
+                ImageUrl = product.ImageUrl
+            };
+            productDal.Update(product);
+            return new SuccessResult(Messages.ProductQuantityAdded);
+        }
         public IResult Delete(Guid id)
         {
             var product = productDal.Get(x => x.Id == id);
