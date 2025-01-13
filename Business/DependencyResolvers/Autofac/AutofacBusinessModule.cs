@@ -37,9 +37,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<OrderAssignmentManager>().As<IOrderAssignmentService>();
             builder.RegisterType<EfOrderAssignmentDal>().As<IOrderAssignmentDal>();
 
-            builder.RegisterType<NotificationManager>().As<INotificationService>();
-            builder.RegisterType<EfNotificationDal>().As<INotificationDal>();
-
             builder.RegisterType<EmployeeManager>().As<IEmployeeService>();
             builder.RegisterType<EfEmployeeDal>().As<IEmployeeDal>();
 

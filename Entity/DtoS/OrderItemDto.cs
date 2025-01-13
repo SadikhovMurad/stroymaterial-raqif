@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.Concrete
+namespace Entity.DtoS
 {
-    public class Notification : IEntity
+    public class OrderItemDto : IDto
     {
-        public int Id { get; set; }
-        public string Content { get; set; }
+        public Guid ProductId { get; set; }
         public Guid OrderId { get; set; }
-        public Order Order { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
     }
 }

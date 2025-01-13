@@ -15,7 +15,7 @@ namespace DataAccess.Concrete.EntityFramework
 
         public ModelDbContext()
         {
-             
+
         }
         public ModelDbContext(DbContextOptions<ModelDbContext> options)
         : base(options)
@@ -35,10 +35,10 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Company> Company { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<OrderAssignment> OrderAssignments { get; set; }
 
@@ -77,21 +77,20 @@ namespace DataAccess.Concrete.EntityFramework
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.Product) 
-                .WithMany()            
-                .HasForeignKey(o => o.ProductId)  
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Order>()
                 .HasOne(o => o.User)
                 .WithMany()
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Notification)
-                .WithOne(n => n.Order)
-                .HasForeignKey<Notification>(n => n.OrderId);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(o => o.Product)
+                .WithMany()
+                .HasForeignKey(o => o.ProductId);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(o => o.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(o => o.OrderId);
 
 
             base.OnModelCreating(modelBuilder);

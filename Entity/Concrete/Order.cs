@@ -11,16 +11,14 @@ namespace Entity.Concrete
     public class Order : IEntity
     {
         public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public Product Product { get; set; }
         public DateTime OrderDate { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
         public string Location { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
         public string PhoneNumber { get; set; }
         public bool paymentMethodIsCart { get; set; }
-        public bool hasNotification { get; set; }
-        public Notification Notification { get; set; }
+        public string Notification { get; set; }
         public decimal TotalAmount { get; set; }
         public bool IsSuccess { get; set; } = false;
     }

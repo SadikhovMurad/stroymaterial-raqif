@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface INotificationDal : IRepositoryBase<Notification>
+    public interface IOrderItemDal : IRepositoryBase<OrderItem>
     {
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfNotificationDal : EfRepositoryBase<Notification, ModelDbContext>, INotificationDal
+    public class EfOrderItemDal : EfRepositoryBase<OrderItem, ModelDbContext>, IOrderItemDal
     {
     }
 }

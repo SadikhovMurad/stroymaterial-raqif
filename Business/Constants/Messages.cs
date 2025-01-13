@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,12 @@ namespace Business.Constants
         public static string IdNotEnteredSub = "Bu Id-də heç bir alt kateqoriya mövcud deyil";
         public static string SubCategoryDeleted = " Alt Kateqoriya silindi";
 
+
+        public static string ProductAddedToCart = "Mehsul sebete elave olundu";
+        public static string ProductRemovedToCart = "Mehsul ugurla sebetden silindi";
+        public static string CartClear = "Sebetdeki butun mehsullar silindi";
+        public static string GetOrder = "Sifaris ugurla elave olundu";
+        
 
 
         public static string ProductNotFound = "Mehsul tapilmadi";

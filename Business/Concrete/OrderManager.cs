@@ -50,11 +50,6 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Order>>(orderDal.GetAll(), Messages.CategoryListed);
         }
 
-        public IDataResult<List<Notification>> GetAllNotificationByOrderId(Guid orderId)
-        {
-            throw new NotImplementedException();
-        }
-
         public IDataResult<Order> GetByFilter<T>(string propertyName, T value)
         {
             throw new NotImplementedException();
