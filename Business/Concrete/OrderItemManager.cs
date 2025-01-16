@@ -27,6 +27,7 @@ namespace Business.Concrete
         public IResult Add(OrderItemDto orderItemDto)
         {
             var orderItem = _mapper.Map<OrderItem>(orderItemDto);
+            orderItem.Price = orderItemDto.Quantity * orderItem.Product.Price;
             _orderItemDal.Add(orderItem);
             return new SuccessResult(Messages.ProductAddedToCart);
         }

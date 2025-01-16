@@ -87,11 +87,6 @@ namespace DataAccess.Concrete.EntityFramework
                 .WithMany()
                 .HasForeignKey(o => o.ProductId);
 
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(o => o.Order)
-                .WithMany(o => o.OrderItems)
-                .HasForeignKey(o => o.OrderId);
-
 
             base.OnModelCreating(modelBuilder);
         }

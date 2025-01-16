@@ -31,6 +31,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<OrderManager>().As<IOrderService>();
             builder.RegisterType<EfOrderDal>().As<IOrderDal>();
 
+            builder.RegisterType<OrderItemManager>().As<IOrderItemService>();
+            builder.RegisterType<EfOrderItemDal>().As<IOrderItemDal>();
+
             builder.RegisterType<OrderHistoryManager>().As<IOrderHistoryService>();
             builder.RegisterType<EfOrderHistoryDal>().As<IOrderHistoryDal>();
 
