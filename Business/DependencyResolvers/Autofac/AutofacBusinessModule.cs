@@ -40,6 +40,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<OrderAssignmentManager>().As<IOrderAssignmentService>();
             builder.RegisterType<EfOrderAssignmentDal>().As<IOrderAssignmentDal>();
 
+            builder.RegisterType<CartManager>().As<ICartService>();
+            builder.RegisterType<EfCartDal>().As<ICartDal>();
+
             builder.RegisterType<EmployeeManager>().As<IEmployeeService>();
             builder.RegisterType<EfEmployeeDal>().As<IEmployeeDal>();
 

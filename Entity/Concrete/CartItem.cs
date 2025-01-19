@@ -2,17 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Entity.Concrete
 {
-    public class OrderItem:IEntity
+    public class CartItem:IEntity
     {
         public int Id { get; set; }
-        public Guid OrderId { get; set; }
-        public Order Order { get; set; }
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
+
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
         public int Quantity { get; set; }

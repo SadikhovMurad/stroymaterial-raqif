@@ -14,6 +14,7 @@ namespace Business.Abstract
         IDataResult<List<OrderItem>> GetAll();
         IDataResult<OrderItem> GetById(int id);
         IDataResult<OrderItem> GetByFilter<T>(string propertyName, T value);
+        IResult AddQuantity(int id);
         IResult Add(OrderItemDto orderItemDto);
         IResult Update(int id, OrderItem? orderItem);
         IResult Delete(int id);

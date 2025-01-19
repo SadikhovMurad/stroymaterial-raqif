@@ -12,7 +12,7 @@ namespace Entity.Concrete
     {
         public Guid Id { get; set; }
         public DateTime OrderDate { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public Cart Card { get; set; }
         public string Location { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
@@ -21,5 +21,7 @@ namespace Entity.Concrete
         public string Notification { get; set; }
         public decimal TotalAmount { get; set; }
         public bool IsSuccess { get; set; } = false;
+
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }

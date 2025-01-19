@@ -32,6 +32,25 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ProductAddedToCart);
         }
 
+        public IResult AddQuantity(int id)
+        {
+            var orderItem = _orderItemDal.Get(oi => oi.Id == id);
+            if(orderItem == null) 
+            {
+                return new ErrorResult(Messages.ProductNotFound);
+            }
+            var newOrderItem = new OrderItem()
+            {
+                Id = id,
+                ProductId = orderItem.ProductId,
+                Product = orderItem.Product,
+                Quantity = orderItem.Quantity + 1,
+                Price = orderItem.Price
+            };
+            _orderItemDal.Update(newOrderItem);
+            return new SuccessResult(Messages.ProductQuantityAdded);
+        }
+
         public IResult Delete(int id)
         {
             var orderItem = _orderItemDal.Get(x => x.Id == id);

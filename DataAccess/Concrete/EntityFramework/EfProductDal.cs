@@ -25,6 +25,7 @@ namespace DataAccess.Concrete.EntityFramework
             {
                 ProductByCategoryOrSubcategoryDto dto = new ProductByCategoryOrSubcategoryDto
                 {
+                    Id = item.Id,
                     Name= item.Name,
                     Description= item.Description,
                     Brand=item.Marka,

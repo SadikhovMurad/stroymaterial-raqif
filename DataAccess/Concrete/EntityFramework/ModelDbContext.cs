@@ -36,6 +36,8 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Company> Company { get; set; }
@@ -76,16 +78,17 @@ namespace DataAccess.Concrete.EntityFramework
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.User)
-                .WithMany()
-                .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Cart>()
+                    .HasMany(c => c.CartItems)
+                    .WithOne(ci => ci.Cart)
+                    .HasForeignKey(ci => ci.CartId) 
+                    .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<OrderItem>()
-                .HasOne(o => o.Product)
-                .WithMany()
-                .HasForeignKey(o => o.ProductId);
+            modelBuilder.Entity<Order>()
+                    .HasMany(c => c.OrderItems)
+                    .WithOne(ci => ci.Order)
+                    .HasForeignKey(ci => ci.OrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
 
             base.OnModelCreating(modelBuilder);

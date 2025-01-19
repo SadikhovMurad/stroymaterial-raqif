@@ -3,6 +3,7 @@ using Business.Concrete;
 using Entity.DtoS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
 
 namespace stroymaterial_raqif.Controllers
 {
@@ -40,7 +41,16 @@ namespace stroymaterial_raqif.Controllers
             }
             return BadRequest(result);
         }
-
+        [HttpPost("AddQuantity/{id}")]
+        public IActionResult AddOrderItemQuantity(int id)
+        {
+            var result = _orderItemService.AddQuantity(id);
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
     }
 }
