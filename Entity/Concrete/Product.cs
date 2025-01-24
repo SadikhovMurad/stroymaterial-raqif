@@ -23,6 +23,7 @@ namespace Entity.Concrete
         public int Quantity { get; set; }
         public bool hasStock { get; set; }
         public string? ImageUrl { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
 
     }
 }

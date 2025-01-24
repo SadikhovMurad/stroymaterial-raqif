@@ -19,7 +19,7 @@ namespace stroymaterial_raqif.Controllers
         [HttpGet("AllOrders")]
         public IActionResult GetAll() 
         {
-            var result = _orderService.GetAll();
+            var result = _orderService.GetAllOrderWithDetails();
             if (result.Success)
             {
                 return Ok(result);

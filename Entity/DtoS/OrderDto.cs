@@ -14,7 +14,6 @@ namespace Entity.DtoS
         public string Location { get; set; }
         public string UserId { get; set; }
         public string PhoneNumber { get; set; }
-        public bool paymentMethodIsCart { get; set; }
         public string Notification { get; set; }
         public decimal TotalAmount { get; set; }
     }

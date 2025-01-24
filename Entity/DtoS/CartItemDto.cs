@@ -11,8 +11,10 @@ namespace Entity.DtoS
     public class CartItemDto:IDto
     {
         public int CartId { get; set; }
+        public string UserName { get; set; }
+        public string UserEmail { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal ItemTotalPrice { get; set; }
     }
 }

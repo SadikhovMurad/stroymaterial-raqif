@@ -4,6 +4,7 @@ using DataAccess.Concrete.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ModelDbContext))]
-    partial class ModelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250121074105_32322")]
+    partial class _32322
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,7 +251,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CartId")
+                    b.Property<int>("CardId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsSuccess")
@@ -276,9 +279,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("paymentMethodIsCart")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
+                    b.HasIndex("CardId");
 
                     b.HasIndex("UserId");
 
@@ -595,9 +601,9 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entity.Concrete.Order", b =>
                 {
-                    b.HasOne("Entity.Concrete.Cart", "Cart")
+                    b.HasOne("Entity.Concrete.Cart", "Card")
                         .WithMany()
-                        .HasForeignKey("CartId")
+                        .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -607,7 +613,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Cart");
+                    b.Navigation("Card");
 
                     b.Navigation("User");
                 });
@@ -634,9 +640,9 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entity.Concrete.OrderItem", b =>
                 {
                     b.HasOne("Entity.Concrete.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Entity.Concrete.Product", "Product")
@@ -741,6 +747,11 @@ namespace DataAccess.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Entity.Concrete.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Entity.Concrete.Product", b =>

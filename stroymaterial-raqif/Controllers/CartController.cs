@@ -28,11 +28,44 @@ namespace stroymaterial_raqif.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("AddItemToCart/{cartId}")]
-        public IActionResult AddItemToCart(int cartId,CartItemDto itemDto)
+        [HttpPost("AddItemToCart/{userId}")]
+        public IActionResult AddItemToCart(string userId,Guid productId)
         {
-            var result = _cartService.AddItemToCart(cartId, itemDto);
+            var result = _cartService.AddItemToCart(userId, productId);
             if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
+        {
+            var result = _cartService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetCartByUserId/{userId}")]
+        public IActionResult GetCartByUserId(string userId)
+        {
+            var result = _cartService.GetByUserId(userId);
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetAllCartItems/{userId}")]
+        public IActionResult GetAllCartItemsByUserId(string userId)
+        {
+            var result = _cartService.GetAllCartItemsByUserId(userId);
+            if (result.Success)
             {
                 return Ok(result);
             }

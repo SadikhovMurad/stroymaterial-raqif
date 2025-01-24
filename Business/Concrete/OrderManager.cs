@@ -18,20 +18,30 @@ namespace Business.Concrete
     public class OrderManager : IOrderService
     {
         private readonly IOrderDal orderDal;
+        private readonly ICartDal cartDal;
         private readonly IMapper _mapper;
 
-        public OrderManager(IOrderDal orderDal, IMapper mapper)
+        public OrderManager(IOrderDal orderDal, IMapper mapper, ICartDal cartDal)
         {
             this.orderDal = orderDal;
             _mapper = mapper;
+            this.cartDal = cartDal;
         }
 
 
         public IResult Add(OrderDto orderDto)
         {
+            var cart = cartDal.Get(c => c.UserId == orderDto.UserId);
+            if (cart == null)
+            {
+                return new ErrorResult("Sebet bosdur");
+            }
             var order = _mapper.Map<Order>(orderDto);
+            order.CartId = cart.Id;
+            order.Cart = cart;
+            order.IsSuccess = true;
             orderDal.Add(order);
-            return new SuccessResult(Messages.ProductAdded);
+            return new SuccessResult("Sifaris ugurla verildi");
         }
 
         public IResult Delete(Guid id)
@@ -48,6 +58,11 @@ namespace Business.Concrete
         public IDataResult<List<Order>> GetAll()
         {
             return new SuccessDataResult<List<Order>>(orderDal.GetAll(), Messages.CategoryListed);
+        }
+
+        public IDataResult<List<OrderForListDto>> GetAllOrderWithDetails()
+        {
+            return new SuccessDataResult<List<OrderForListDto>>(orderDal.GetAllOrderWithDetails(), "Butun sifarisler getirildi");
         }
 
         public IDataResult<Order> GetByFilter<T>(string propertyName, T value)

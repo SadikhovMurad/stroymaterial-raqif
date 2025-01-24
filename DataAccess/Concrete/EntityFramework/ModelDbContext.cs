@@ -78,17 +78,17 @@ namespace DataAccess.Concrete.EntityFramework
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Cart>()
-                    .HasMany(c => c.CartItems)
-                    .WithOne(ci => ci.Cart)
-                    .HasForeignKey(ci => ci.CartId) 
-                    .OnDelete(DeleteBehavior.Cascade);
+            // Cart və CartItem arasında 1 çox əlaqə
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.CartId);
 
-            modelBuilder.Entity<Order>()
-                    .HasMany(c => c.OrderItems)
-                    .WithOne(ci => ci.Order)
-                    .HasForeignKey(ci => ci.OrderId)
-                    .OnDelete(DeleteBehavior.Cascade);
+            // CartItem və Product arasında çox-1 əlaqə
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(ci => ci.ProductId);
 
 
             base.OnModelCreating(modelBuilder);

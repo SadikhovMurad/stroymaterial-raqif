@@ -18,12 +18,14 @@ namespace Business.Concrete
     public class CartManager : ICartService
     {
         private readonly ICartDal _cartDal;
+        private readonly IProductDal _productDal;
         private readonly IMapper _mapper;
 
-        public CartManager(ICartDal cartDal, IMapper mapper)
+        public CartManager(ICartDal cartDal, IMapper mapper, IProductDal productDal)
         {
             _cartDal = cartDal;
             _mapper = mapper;
+            _productDal = productDal;
         }
 
         public IResult Add()
@@ -39,7 +41,7 @@ namespace Business.Concrete
 
         public IResult AddCartWithUserId(string userId)
         {
-            if(userId == null)
+            if (userId == null)
             {
                 return new ErrorResult("User ID bos ola bilmez");
             }
@@ -52,33 +54,41 @@ namespace Business.Concrete
             return new SuccessResult("Sebet ugurla yaradildi");
         }
 
-        public IResult AddItemToCart(int cartId, CartItemDto cartItemDto)
+        public IResult AddItemToCart(string userId, Guid productId)
         {
-            //if(cartItemDto == null)
-            //{
-            //    return new ErrorResult("Model bosdur.");
-            //}
-            //var cart = _cartDal.Get(c => c.Id == cartId);
-            //if(cart != null)
-            //{
-            //    cart.CartItems.Add(cartItemDto);
-            //}
-            //cartItemDto.CartId = cart.Id;
-            //_cartDal.AddItemToCart(cartItemDto);
-            //return new SuccessResult("Mehsul ugurla sebete elave olundu");
-            var cart = _cartDal.Get(c => c.Id == cartItemDto.CartId);
+            var cart = _cartDal.GetCartByUserId(userId);
+            var product = _productDal.Get(c => c.Id == productId);
             if (cart == null)
             {
-                return new ErrorResult("Sebet tapilmadi");
+                return new ErrorResult("Bele bir sebet yoxdur");
             }
-            var cartItem = _mapper.Map<CartItem>(cartItemDto);
-            if (cart.CartItems == null)
+
+            if(cart.CartItems.Count == 0)
             {
-                cart.CartItems = new List<CartItem>();
+                cart.CartItems.Add(
+                    new CartItem()
+                    {
+                        CartId = cart.Id,
+                        ProductId = product.Id,
+                        Cart = cart,
+                        Product = product,
+                        Quantity = 1,
+                        ItemTotalPrice = 0
+                    });
+                return new SuccessResult("Okay");
             }
-            cart.CartItems.Add(cartItem);
-            _cartDal.AddItemToCart(cartItem);
-            return new SuccessResult("Mehsul ugurla elave olundu");
+            else
+            {
+                foreach (var item in cart.CartItems)
+                {
+                    if(item.ProductId == product.Id)
+                    {
+                        item.Quantity++;
+                        _cartDal.UpdateCartItem(item);
+                    }
+                }
+                return new SuccessResult("Added");
+            }
         }
 
         public IResult Delete(int id)
@@ -106,9 +116,14 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Cart>>(_cartDal.GetAll(), "Sebetler ugurla getirildi");
         }
 
+        public IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(string userId)
+        {
+            return new SuccessDataResult<List<CartItemDto>>(_cartDal.GetAllCartItemsByUserId(userId), "Sebetdeki mehsullar ugurla getirildi");
+        }
+
         public IDataResult<Cart> GetByUserId(string userId)
         {
-            if(userId == null)
+            if (userId == null)
             {
                 return new ErrorDataResult<Cart>("User ID bos ola bilmez");
             }

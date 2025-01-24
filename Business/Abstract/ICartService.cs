@@ -13,11 +13,12 @@ namespace Business.Abstract
     {
         IDataResult<List<Cart>> GetAll();
         IDataResult<Cart> GetByUserId(string userId);
+        IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(string userId);
         IResult Add();
         IResult AddCartWithUserId(string userId);
         IResult Update(int id, Cart? cart);
         IResult Delete(int id);
-        IResult AddItemToCart(int cartId,CartItemDto cartItemDto);
+        IResult AddItemToCart(string userId,Guid productId);
         IResult DeleteItemFromCart(int cartId,CartItem cartItem);
     }
 }
