@@ -52,7 +52,7 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpPost("AddCategory")]
-        public IActionResult AddCategory(CategoryDto category)
+        public IActionResult AddCategory([FromBody] CategoryDto category)
         {
             var result = _categoryService.Add(category);
             if (result.Success)

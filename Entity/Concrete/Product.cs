@@ -18,7 +18,6 @@ namespace Entity.Concrete
         public int SubCategoryId { get; set; }
         public SubCategory SubCategory { get; set; }
         public decimal Price { get; set; }
-        public int SaleCount { get; set; }
         public float Rating { get; set; }
         public int Quantity { get; set; }
         public bool hasStock { get; set; }

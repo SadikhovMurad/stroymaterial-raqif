@@ -1,10 +1,14 @@
-﻿using Core.Entity.Concrete;
+﻿using Business.Abstract;
+using Core.Entity.Concrete;
+using Entity.DtoS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using stroymaterial_raqif.Identity;
-using stroymaterial_raqif.Identity.JWT;
+using Microsoft.IdentityModel.Tokens;
 using stroymaterial_raqif.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace stroymaterial_raqif.Controllers
 {
@@ -12,81 +16,51 @@ namespace stroymaterial_raqif.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private ITokenHelper _tokenHelper;
+        private readonly IAuthService _authService;
 
-        public AuthController(UserManager<User> userManager, ITokenHelper tokenHelper)
+        public AuthController(IAuthService authService)
         {
-            _userManager = userManager;
-            _tokenHelper = tokenHelper;
+            _authService = authService;
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login(UserForLoginDto userForLoginDto)
+        {
+            var userToLogin = _authService.Login(userForLoginDto);
+            if (!userToLogin.Success)
+            {
+                return BadRequest(userToLogin.Message);
+            }
+
+            var result = _authService.CreateAccessToken(userToLogin.Data);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public IActionResult Register(UserForRegisteredDto userForRegisterDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = new User
+            var userExists = _authService.UserExists(userForRegisterDto.Email);
+            if (!userExists.Success)
             {
-                UserName = model.Email,
-                Email = model.Email,
-                Firstname = model.FirstName,
-                Lastname = model.LastName
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-                return Ok(new { Message = "User registered successfully" });
-
-            return BadRequest(result.Errors);
-        }
-
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
-                return Unauthorized(new { Message = "Invalid credentials" });
-            var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _tokenHelper.CreateToken(user, roles.ToList());
-
-            return Ok(new { Message = "Login successful", Token = accessToken.Token });
-        }
-
-
-
-        [HttpGet("getAllUsers")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            List<GetAllUsersModel> users = new List<GetAllUsersModel>();
-            foreach (var user in _userManager.Users)
-            {
-                var userModel = new GetAllUsersModel()
-                {
-                    Id = user.Id,
-                    FirstName = user.Firstname,
-                    LastName = user.Lastname,
-                    Email = user.Email
-                };
-                users.Add(userModel);
+                return BadRequest(userExists.Message);
             }
-            return Ok(users);
+
+            var registerResult = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
+            var result = _authService.CreateAccessToken(registerResult.Data);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
         }
 
 
-        [HttpGet("getRoles")]
-        public async Task<IActionResult> GetRoles()
-        {
-            var user = await _userManager.FindByEmailAsync("admin@gmail.com");
-            var role = await _userManager.GetRolesAsync(user);
-            var roles = role.ToList();
-            
-            return Ok(roles);
-        }
+        
     }
 }

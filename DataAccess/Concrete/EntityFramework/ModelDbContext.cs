@@ -10,23 +10,21 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class ModelDbContext : IdentityDbContext<User>
+    public class ModelDbContext : DbContext
     {
-
         public ModelDbContext()
         {
-
+            
         }
         public ModelDbContext(DbContextOptions<ModelDbContext> options)
         : base(options)
         {
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
             }
         }
 
@@ -39,10 +37,13 @@ namespace DataAccess.Concrete.EntityFramework
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<OperationClaim> OperationClaims { get; set; }
+        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<OrderAssignment> OrderAssignments { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

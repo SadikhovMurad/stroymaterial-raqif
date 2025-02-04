@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstract;
+using Business.Aspects;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspect.Validation;
@@ -31,6 +32,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
+        [SecuredOperation("Admin")]
         public IResult Add(CategoryDto categoryDto)
         {
             var result = BusinessRules.Run(CheckIfCategoryNameExist(categoryDto.Name));

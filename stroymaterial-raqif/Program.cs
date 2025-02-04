@@ -2,18 +2,16 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Business.AutoMapper;
 using Business.DependencyResolvers.Autofac;
+using Core.DependencyResolvers;
 using Core.Entity.Concrete;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Security.Encyption;
+using Core.Utilities.Security.JWT;
 using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using stroymaterial_raqif.Identity;
-using stroymaterial_raqif.Identity.JWT;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,32 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        BearerFormat = "JWT",
-        Description = "Please enter a valid token in the format **'Bearer {your_token}'**"
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -60,7 +33,15 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddScoped<ITokenHelper,JWTHelper>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddDbContext<ModelDbContext>(options => options.UseSqlServer(
 
@@ -68,37 +49,35 @@ builder.Services.AddDbContext<ModelDbContext>(options => options.UseSqlServer(
 
     ));
 
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ModelDbContext>()
-    .AddDefaultTokenProviders();
+var tokenOptions = builder.Configuration.GetSection("TokenOptions")
+    .Get<TokenOptions>();
 
-
-var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<stroymaterial_raqif.Identity.JWT.TokenOptions>();
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
+            ValidIssuer = tokenOptions.Issuer,
+            ValidAudience = tokenOptions.Audience,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["TokenOptions:Issuer"],
-            ValidAudience = builder.Configuration["TokenOptions:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenOptions:SecurityKey"]))
+            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
         };
     });
 
-builder.Services.AddAuthorization(options =>
+
+builder.Services.AddDependencyResolvers(new ICoreModule[]
 {
-    options.AddPolicy("Bearer", policy => policy.RequireAuthenticatedUser());
+   new CoreModule(),
 });
 
 
-
-
-
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
 
@@ -108,6 +87,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
