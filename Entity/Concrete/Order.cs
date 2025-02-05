@@ -15,7 +15,7 @@ namespace Entity.Concrete
         public Cart Cart { get; set; }
         public DateTime OrderDate { get; set; }
         public string Location { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
         public string PhoneNumber { get; set; }
         public string Notification { get; set; }

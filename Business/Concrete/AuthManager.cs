@@ -4,6 +4,8 @@ using Core.Entity.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
+using DataAccess.Abstract;
+using Entity.Concrete;
 using Entity.DtoS;
 using System;
 using System.Collections.Generic;
@@ -17,12 +19,14 @@ namespace Business.Concrete
     {
 
         private readonly IUserService _userService;
+        private readonly ICartDal _cartService;
         private readonly ITokenHelper _tokenHelper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, ICartDal cartService)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _cartService = cartService;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -61,6 +65,12 @@ namespace Business.Concrete
                 PasswordSalt = passwordSalt
             };
             _userService.Add(user);
+            var cart = new Cart()
+            {
+                UserId = user.Id,
+                CartItems = new List<CartItem>()
+            };
+            _cartService.Add(cart);
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 

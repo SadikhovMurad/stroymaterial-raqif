@@ -12,13 +12,13 @@ namespace Business.Abstract
     public interface ICartService
     {
         IDataResult<List<Cart>> GetAll();
-        IDataResult<Cart> GetByUserId(string userId);
-        IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(string userId);
-        IResult Add();
-        IResult AddCartWithUserId(string userId);
+        IDataResult<CartDto> GetByUserId(Guid userId);
+        IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(Guid userId);
+        IResult Add(Cart cart);
+        IResult AddCartWithUserId(Guid userId);
         IResult Update(int id, Cart? cart);
         IResult Delete(int id);
-        IResult AddItemToCart(string userId,Guid productId);
+        IResult AddItemToCart(Guid userId,Guid productId);
         IResult DeleteItemFromCart(int cartId,CartItem cartItem);
     }
 }

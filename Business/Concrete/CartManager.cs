@@ -28,18 +28,13 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
-        public IResult Add()
+        public IResult Add(Cart cart)
         {
-            var newCart = new Cart()
-            {
-                UserId = "fb78b7e1-8851-411e-bd28-f33d16d15b39",
-                CartItems = new List<CartItem>()
-            };
-            _cartDal.Add(newCart);
+            _cartDal.Add(cart);
             return new SuccessResult("Sebet ugurla yaradildi");
         }
 
-        public IResult AddCartWithUserId(string userId)
+        public IResult AddCartWithUserId(Guid userId)
         {
             if (userId == null)
             {
@@ -54,41 +49,10 @@ namespace Business.Concrete
             return new SuccessResult("Sebet ugurla yaradildi");
         }
 
-        public IResult AddItemToCart(string userId, Guid productId)
+        public IResult AddItemToCart(Guid userId, Guid productId)
         {
-            var cart = _cartDal.GetCartByUserId(userId);
-            var product = _productDal.Get(c => c.Id == productId);
-            if (cart == null)
-            {
-                return new ErrorResult("Bele bir sebet yoxdur");
-            }
-
-            if(cart.CartItems.Count == 0)
-            {
-                cart.CartItems.Add(
-                    new CartItem()
-                    {
-                        CartId = cart.Id,
-                        ProductId = product.Id,
-                        Cart = cart,
-                        Product = product,
-                        Quantity = 1,
-                        ItemTotalPrice = 0
-                    });
-                return new SuccessResult("Okay");
-            }
-            else
-            {
-                foreach (var item in cart.CartItems)
-                {
-                    if(item.ProductId == product.Id)
-                    {
-                        item.Quantity++;
-                        _cartDal.UpdateCartItem(item);
-                    }
-                }
-                return new SuccessResult("Added");
-            }
+            _cartDal.AddItemToCart(userId, productId);
+            return new SuccessResult("Mehsul karta ugurla elave olundu tesekkurler");
         }
 
         public IResult Delete(int id)
@@ -116,18 +80,18 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Cart>>(_cartDal.GetAll(), "Sebetler ugurla getirildi");
         }
 
-        public IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(string userId)
+        public IDataResult<List<CartItemDto>> GetAllCartItemsByUserId(Guid userId)
         {
             return new SuccessDataResult<List<CartItemDto>>(_cartDal.GetAllCartItemsByUserId(userId), "Sebetdeki mehsullar ugurla getirildi");
         }
 
-        public IDataResult<Cart> GetByUserId(string userId)
+        public IDataResult<CartDto> GetByUserId(Guid userId)
         {
             if (userId == null)
             {
-                return new ErrorDataResult<Cart>("User ID bos ola bilmez");
+                return new ErrorDataResult<CartDto>("User ID bos ola bilmez");
             }
-            return new SuccessDataResult<Cart>(_cartDal.GetCartByUserId(userId), "Sebet ugurla getirildi");
+            return new SuccessDataResult<CartDto>(_cartDal.GetCartByUserId(userId), "Sebet ugurla getirildi");
         }
 
         public IResult Update(int id, Cart? cart)

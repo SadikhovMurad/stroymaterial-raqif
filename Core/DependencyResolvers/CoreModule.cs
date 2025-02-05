@@ -1,4 +1,6 @@
-﻿using Core.Utilities.IoC;
+﻿using CloudinaryDotNet;
+using Core.Storage;
+using Core.Utilities.IoC;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -16,6 +18,7 @@ namespace Core.DependencyResolvers
         {
             serviceCollection.AddMemoryCache();
             serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            serviceCollection.AddSingleton<ICloudinaryService,CloudinaryService>();
             serviceCollection.AddSingleton<Stopwatch>();
         }
     }

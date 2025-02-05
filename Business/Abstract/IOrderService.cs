@@ -15,7 +15,7 @@ namespace Business.Abstract
         IDataResult<List<OrderForListDto>> GetAllOrderWithDetails();
         IDataResult<Order> GetById(Guid id);
         IDataResult<Order> GetByFilter<T>(string propertyName, T value);
-        IResult Add(OrderDto orderDto);
+        IResult Add(OrderDto orderDto,Guid userId);
         IResult Update(Guid id, Order? order);
         IResult Delete(Guid id);
     }

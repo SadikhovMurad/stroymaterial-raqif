@@ -37,10 +37,10 @@ namespace stroymaterial_raqif.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("CreateOrder")]
-        public IActionResult AddOrder(OrderDto orderDto)
+        [HttpPost("CreateOrder/{userId}")]
+        public IActionResult AddOrder(OrderDto orderDto, Guid userId)
         {
-            var result = _orderService.Add(orderDto);
+            var result = _orderService.Add(orderDto,userId);
             if (result.Success)
             {
                 return Ok(result);

@@ -17,19 +17,19 @@ namespace stroymaterial_raqif.Controllers
             _cartService = cartService;
         }
 
-        [HttpPost("CreateCart")]
-        public IActionResult CreateCart()
-        {
-            var result = _cartService.Add();
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
+        //[HttpPost("CreateCart")]
+        //public IActionResult CreateCart()
+        //{
+        //    var result = _cartService.Add();
+        //    if (result.Success)
+        //    {
+        //        return Ok(result);
+        //    }
+        //    return BadRequest(result);
+        //}
 
         [HttpPost("AddItemToCart/{userId}")]
-        public IActionResult AddItemToCart(string userId,Guid productId)
+        public IActionResult AddItemToCart(Guid userId,Guid productId)
         {
             var result = _cartService.AddItemToCart(userId, productId);
             if(result.Success)
@@ -51,7 +51,7 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpGet("GetCartByUserId/{userId}")]
-        public IActionResult GetCartByUserId(string userId)
+        public IActionResult GetCartByUserId(Guid userId)
         {
             var result = _cartService.GetByUserId(userId);
             if(result.Success)
@@ -62,7 +62,7 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpGet("GetAllCartItems/{userId}")]
-        public IActionResult GetAllCartItemsByUserId(string userId)
+        public IActionResult GetAllCartItemsByUserId(Guid userId)
         {
             var result = _cartService.GetAllCartItemsByUserId(userId);
             if (result.Success)

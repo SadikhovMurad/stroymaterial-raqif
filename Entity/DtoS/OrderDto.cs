@@ -1,4 +1,5 @@
 ﻿using Core.Entity.Abstract;
+using Core.Entity.Concrete;
 using Entity.Concrete;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,7 @@ namespace Entity.DtoS
 {
     public class OrderDto : IDto
     {
-        public DateTime OrderDate { get; set; }
         public string Location { get; set; }
-        public string UserId { get; set; }
         public string PhoneNumber { get; set; }
         public string Notification { get; set; }
         public decimal TotalAmount { get; set; }

@@ -11,6 +11,7 @@ namespace DataAccess.Abstract
 {
     public interface IOrderDal:IRepositoryBase<Order>
     {
+        void CreateOrder(OrderDto order,Guid userId);
         public List<OrderForListDto> GetAllOrderWithDetails();
     }
 }

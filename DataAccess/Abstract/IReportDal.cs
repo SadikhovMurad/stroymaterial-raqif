@@ -12,10 +12,10 @@ namespace DataAccess.Abstract
 {
     public interface IReportDal : IRepositoryBase<Report>
     {
-        ReportDto GetDailyReports();
-        ReportDto GetWeeklyReports();
-        ReportDto GetMonthlyReports();
-        ReportDto GetYearReports();
+        ReportDto GetDailyReports(DateTime date);
+        ReportDto GetWeeklyReports(DateTime date);
+        ReportDto GetMonthlyReports(DateTime date);
+        ReportDto GetYearReports(DateTime date);
         List<TopProductDto> GetTopSellingProducts();
     }
 }

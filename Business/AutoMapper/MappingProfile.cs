@@ -37,6 +37,12 @@ namespace Business.AutoMapper
             CreateMap<CartItemDto, CartItem>();
             CreateMap<CartItem, CartItemDto>();
 
+            CreateMap<CartAndCartItemDto, CartItem>();
+            CreateMap<CartItem, CartAndCartItemDto>();
+
+            CreateMap<CartDto, Cart>();
+            CreateMap<Cart, CartDto>();
+
             CreateMap<EmployeeDto, Employee>();
             CreateMap<Employee, EmployeeDto>();
 

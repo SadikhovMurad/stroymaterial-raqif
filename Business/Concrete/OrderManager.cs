@@ -29,18 +29,9 @@ namespace Business.Concrete
         }
 
 
-        public IResult Add(OrderDto orderDto)
+        public IResult Add(OrderDto orderDto, Guid userId)
         {
-            var cart = cartDal.Get(c => c.UserId == orderDto.UserId);
-            if (cart == null)
-            {
-                return new ErrorResult("Sebet bosdur");
-            }
-            var order = _mapper.Map<Order>(orderDto);
-            order.CartId = cart.Id;
-            order.Cart = cart;
-            order.IsSuccess = true;
-            orderDal.Add(order);
+            orderDal.CreateOrder(orderDto,userId);
             return new SuccessResult("Sifaris ugurla verildi");
         }
 

@@ -18,10 +18,11 @@ namespace Entity.DtoS
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int SaleCount { get; set; }
+        public decimal CostPrice { get; set; }
         public float Rating { get; set; }
         public bool HasStock { get; set; }
-        public IFormFile file { get; set; }
         public string ImageUrl { get; set; }
+        public IFormFile file { get; set; }
 
     }
 }

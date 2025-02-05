@@ -11,10 +11,10 @@ namespace Business.Abstract
 {
     public interface IReportService
     {
-        IDataResult<ReportDto> GetDailyReports();
-        IDataResult<ReportDto> GetWeeklyReports();
-        IDataResult<ReportDto> GetMonthlyReports();
-        IDataResult<ReportDto> GetYearReports();
-        IDataResult<ProductDto> GetTopSellingProducts();
+        IDataResult<ReportDto> GetDailyReports(DateTime date);
+        IDataResult<ReportDto> GetWeeklyReports(DateTime date);
+        IDataResult<ReportDto> GetMonthlyReports(DateTime date);
+        IDataResult<ReportDto> GetYearReports(DateTime date);
+        IDataResult<List<TopProductDto>> GetTopSellingProducts();
     }
 }

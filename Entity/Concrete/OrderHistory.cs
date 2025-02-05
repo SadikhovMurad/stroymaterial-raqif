@@ -11,7 +11,7 @@ namespace Entity.Concrete
     {
         public int Id { get; set; }
         public Guid OrderId { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public int CoruierId { get; set; }
         public bool status { get; set; }
     }

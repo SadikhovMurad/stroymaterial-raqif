@@ -13,5 +13,6 @@ namespace Entity.Concrete
         public DateTime Date { get; set; }
         public decimal TotalSales { get; set; }
         public int TotalOrders { get; set; }
+        public decimal Profit { get; set; }
     }
 }

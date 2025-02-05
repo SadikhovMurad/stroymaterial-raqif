@@ -32,7 +32,6 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
-        [SecuredOperation("Admin")]
         public IResult Add(CategoryDto categoryDto)
         {
             var result = BusinessRules.Run(CheckIfCategoryNameExist(categoryDto.Name));

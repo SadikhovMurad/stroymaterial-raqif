@@ -10,8 +10,9 @@ namespace Entity.DtoS
     public class ReportDto:IDto
     {
         public DateTime Date { get; set; }
+        public DateTime? EndDate { get; set; }
         public decimal TotalSales { get; set; }
         public int TotalOrders { get; set; }
-
+        public decimal Profit { get; set; }
     }
 }

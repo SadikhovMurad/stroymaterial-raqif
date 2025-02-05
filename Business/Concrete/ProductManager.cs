@@ -3,6 +3,7 @@ using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspect.Validation;
+using Core.Storage;
 using Core.Utilities.BusinessRules;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -22,14 +23,16 @@ namespace Business.Concrete
         private readonly IProductDal productDal;
         private readonly ICategoryDal categoryDal;
         private readonly ISubcategoryDal subcategoryDal;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
 
-        public ProductManager(IProductDal productDal, IMapper mapper, ICategoryDal categoryDal, ISubcategoryDal subcategoryDal)
+        public ProductManager(IProductDal productDal, IMapper mapper, ICategoryDal categoryDal, ISubcategoryDal subcategoryDal, ICloudinaryService cloudinaryService)
         {
             this.productDal = productDal;
             _mapper = mapper;
             this.categoryDal = categoryDal;
             this.subcategoryDal = subcategoryDal;
+            _cloudinaryService = cloudinaryService;
         }
 
 
@@ -47,6 +50,7 @@ namespace Business.Concrete
             {
                 return new ErrorResult("Kateqoriya ve ya Alt kateqoriya tapilmadi");
             }
+            productDto.ImageUrl = _cloudinaryService.Upload(productDto.file).ToString();
             var product = _mapper.Map<Product>(productDto);
             if (category.Products == null || subcategory.Products == null)
             {
@@ -57,6 +61,11 @@ namespace Business.Concrete
             }
             category.Products.Add(product);
             subcategory.Products.Add(product);
+            if(productDto.file == null)
+            {
+                return new ErrorResult("Sekil bos kecile bilmez");
+            }
+            
             productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
@@ -78,7 +87,6 @@ namespace Business.Concrete
                 SubCategoryId = product.SubCategoryId,
                 SubCategory = product.SubCategory,
                 Marka = product.Marka,
-                SaleCount = product.SaleCount,
                 Quantity = product.Quantity + count,
                 hasStock = true,
                 Price = product.Price,
@@ -102,12 +110,10 @@ namespace Business.Concrete
 
             return new SuccessDataResult<List<ProductByCategoryOrSubcategoryDto>>(productDal.GetProductsByCategory(), Messages.ProductListed);
         }
-
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsByCategoryId(int categoryId)
         {
             throw new NotImplementedException();
         }
-
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsBySubcategoryId(int subcategoryId)
         {
             throw new NotImplementedException();

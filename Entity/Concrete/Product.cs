@@ -20,6 +20,7 @@ namespace Entity.Concrete
         public decimal Price { get; set; }
         public float Rating { get; set; }
         public int Quantity { get; set; }
+        public decimal CostPrice { get; set; }
         public bool hasStock { get; set; }
         public string? ImageUrl { get; set; }
         public ICollection<CartItem> CartItems { get; set; }

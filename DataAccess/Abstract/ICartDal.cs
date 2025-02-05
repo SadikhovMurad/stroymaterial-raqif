@@ -11,11 +11,11 @@ namespace DataAccess.Abstract
 {
     public interface ICartDal : IRepositoryBase<Cart>
     {
-        public List<Cart> GetAllCarts(string userId);
-        public List<CartItemDto> GetAllCartItemsByUserId(string userId);
-        public void AddItemToCart(CartItem item);
+        public List<Cart> GetAllCarts(Guid userId);
+        public List<CartItemDto> GetAllCartItemsByUserId(Guid userId);
+        public void AddItemToCart(Guid userId,Guid productId);
         public void DeleteItemFromCart(CartItem item);
-        public Cart GetCartByUserId(string userId);
+        public CartDto GetCartByUserId(Guid userId);
         public void UpdateCartItem(CartItem cartItem);
 
     }
