@@ -17,17 +17,6 @@ namespace stroymaterial_raqif.Controllers
             _cartService = cartService;
         }
 
-        //[HttpPost("CreateCart")]
-        //public IActionResult CreateCart()
-        //{
-        //    var result = _cartService.Add();
-        //    if (result.Success)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return BadRequest(result);
-        //}
-
         [HttpPost("AddItemToCart/{userId}")]
         public IActionResult AddItemToCart(Guid userId,Guid productId)
         {

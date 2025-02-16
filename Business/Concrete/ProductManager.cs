@@ -108,17 +108,17 @@ namespace Business.Concrete
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAll()
         {
 
-            return new SuccessDataResult<List<ProductByCategoryOrSubcategoryDto>>(productDal.GetProductsByCategory(), Messages.ProductListed);
+            throw new NotImplementedException();
         }
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsByCategoryId(int categoryId)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<ProductByCategoryOrSubcategoryDto>>(productDal.GetProductsByCategory(categoryId),"Mehsullar kateqoriyaya gore siralandi");
         }
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsBySubcategoryId(int subcategoryId)
         {
-            throw new NotImplementedException();
-        }
+            return new SuccessDataResult<List<ProductByCategoryOrSubcategoryDto>>(productDal.GetProductsBySubCategory(subcategoryId), "Mehsullar podkateqoriyaya gore siralandi");
 
+        }
         public IDataResult<List<Product>> GetByFilter<T>(string propertyName, T value)
         {
             throw new NotImplementedException();

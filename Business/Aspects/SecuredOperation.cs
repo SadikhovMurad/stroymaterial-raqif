@@ -13,51 +13,6 @@ using System.Threading.Tasks;
 
 namespace Business.Aspects
 {
-    //public class SecuredOperation : MethodInterception
-    //{
-    //    private string[] _roles;
-    //    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    //    public SecuredOperation(string roles)
-    //    {
-    //        _roles = roles.Split(',');
-    //        _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
-    //    }
-
-    //    protected override void OnBefore(IInvocation invocation)
-    //    {
-    //        var httpContext = _httpContextAccessor.HttpContext;
-
-    //        // Authorization headerini yoxlayırıq
-    //        var authorizationHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-    //        // Əgər Authorization headeri yoxdursa, 401 qaytarırıq
-    //        if (string.IsNullOrEmpty(authorizationHeader))
-    //        {
-    //            throw new Exception("Authorization header is missing.");
-    //        }
-
-    //        // İstifadəçinin rolunu əldə edirik
-    //        var roleClaims = httpContext.User.ClaimRoles();
-
-    //        // Rol yoxlaması
-    //        bool roleFound = false;
-    //        foreach (var role in _roles)
-    //        {
-    //            if (roleClaims.Contains(role))
-    //            {
-    //                roleFound = true;
-    //                break;
-    //            }
-    //        }
-
-    //        // Əgər uyğun rol tapılmadısa, icazə verilmir
-    //        if (!roleFound)
-    //        {
-    //            throw new Exception(Messages.AuthorizationDenied);
-    //        }
-    //    }
-    //}
     public class SecuredOperation : MethodInterception
     {
         private string[] _roles;
@@ -72,6 +27,10 @@ namespace Business.Aspects
 
         protected override void OnBefore(IInvocation invocation)
         {
+            if(_httpContextAccessor.HttpContext == null)
+            {
+                throw new Exception("Nulldur");
+            }
             var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
             foreach (var role in _roles)
             {

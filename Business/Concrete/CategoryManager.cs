@@ -32,6 +32,7 @@ namespace Business.Concrete
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
+        
         public IResult Add(CategoryDto categoryDto)
         {
             var result = BusinessRules.Run(CheckIfCategoryNameExist(categoryDto.Name));
@@ -44,6 +45,7 @@ namespace Business.Concrete
             categoryDal.Add(category);
             return new SuccessResult(Messages.CategoryAdded);
         }
+
 
         public IResult AddSubcategory(int categoryId, SubCategory subCategory)
         {
@@ -64,6 +66,8 @@ namespace Business.Concrete
             categoryDal.Delete(category);
             return new SuccessResult(Messages.CategoryDeleted);
         }
+
+
 
         public IDataResult<List<Category>> GetAll()
         {

@@ -12,6 +12,7 @@ using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,29 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        BearerFormat = "JWT",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Description = "Enter your JWT Access Token",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {jwtSecurityScheme,Array.Empty<string>() }
+    });
+});
 
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -52,8 +75,24 @@ builder.Services.AddDbContext<ModelDbContext>(options => options.UseSqlServer(
 var tokenOptions = builder.Configuration.GetSection("TokenOptions")
     .Get<TokenOptions>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidIssuer = tokenOptions.Issuer,
+//            ValidAudience = tokenOptions.Audience,
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey("mysupersecretkeymysupersecretkey")
+//        };
+//    });
+
+
+builder.Services.AddAuthentication()
+    .AddJwtBearer("Admin", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -68,6 +107,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddDependencyResolvers(new ICoreModule[]
 {
    new CoreModule(),
@@ -76,7 +117,12 @@ builder.Services.AddDependencyResolvers(new ICoreModule[]
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Admin", policy =>
+    {
+        policy.AuthenticationSchemes.Add("Admin");
+        policy.RequireAuthenticatedUser();
+        policy.RequireRole("Admin");
+    });
 });
 
 var app = builder.Build();

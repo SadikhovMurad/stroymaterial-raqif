@@ -14,11 +14,11 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfProductDal : EfRepositoryBase<Product, ModelDbContext>, IProductDal
     {
-        public List<ProductByCategoryOrSubcategoryDto> GetProductsByCategory()
+        public List<ProductByCategoryOrSubcategoryDto> GetProductsByCategory(int categoryId)
         {
             using var context = new ModelDbContext();
 
-            var products = context.Products.Include(x => x.Category).Include(x=>x.SubCategory).ToList();
+            var products = context.Products.Include(x => x.Category).Include(x=>x.SubCategory).Where(p=>p.CategoryId == categoryId).ToList();
             List<ProductByCategoryOrSubcategoryDto> productByCategoryOrSubcategories = new List<ProductByCategoryOrSubcategoryDto>();
 
             foreach (var item in products)
@@ -41,11 +41,11 @@ namespace DataAccess.Concrete.EntityFramework
             return productByCategoryOrSubcategories;
         }
 
-        public List<ProductByCategoryOrSubcategoryDto> GetProductsBySubCategory()
+        public List<ProductByCategoryOrSubcategoryDto> GetProductsBySubCategory(int subCategoryId)
         {
             using var context = new ModelDbContext();
 
-            var products = context.Products.Include(x => x.SubCategory).ToList();
+            var products = context.Products.Include(x => x.Category).Include(x=>x.SubCategory).Where(p=>p.SubCategoryId == subCategoryId).ToList();
             List<ProductByCategoryOrSubcategoryDto> productByCategoryOrSubcategories = new List<ProductByCategoryOrSubcategoryDto>();
 
             foreach (var item in products)
