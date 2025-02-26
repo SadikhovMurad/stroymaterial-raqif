@@ -105,10 +105,10 @@ namespace Business.Concrete
             productDal.Delete(product);
             return new SuccessResult(Messages.ProductRemoved);
         }
-        public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAll()
+        public IDataResult<List<ProductForListDto>> GetAll()
         {
 
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<ProductForListDto>>(productDal.GetAllProducts(),Messages.ProductListed);
         }
         public IDataResult<List<ProductByCategoryOrSubcategoryDto>> GetAllProductsByCategoryId(int categoryId)
         {

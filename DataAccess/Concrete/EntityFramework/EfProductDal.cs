@@ -14,6 +14,38 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfProductDal : EfRepositoryBase<Product, ModelDbContext>, IProductDal
     {
+        public List<ProductForListDto> GetAllProducts()
+        {
+            using var context = new ModelDbContext();
+            var products = context.Products.
+                Include(p => p.Category)
+                .Include(p => p.SubCategory).ToList();
+
+            var dtoList = new List<ProductForListDto>();
+
+            foreach (var product in products)
+            {
+                dtoList.Add(new ProductForListDto
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Marka = product.Marka,
+                    CategoryId = product.CategoryId,
+                    CategoryName = product.Category.Name,
+                    SubcategoryId = product.SubCategoryId,
+                    SubcategoryName = product.SubCategory.Name,
+                    Price = product.Price,
+                    Quantity = product.Quantity,
+                    SaleCount = 0,
+                    Rating = product.Rating,
+                    HasStock = product.hasStock,
+                    ImageUrl = product.ImageUrl,
+
+                });
+            }
+            return dtoList;
+        }
         public List<ProductByCategoryOrSubcategoryDto> GetProductsByCategory(int categoryId)
         {
             using var context = new ModelDbContext();
@@ -40,7 +72,6 @@ namespace DataAccess.Concrete.EntityFramework
             }
             return productByCategoryOrSubcategories;
         }
-
         public List<ProductByCategoryOrSubcategoryDto> GetProductsBySubCategory(int subCategoryId)
         {
             using var context = new ModelDbContext();

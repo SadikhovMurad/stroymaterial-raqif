@@ -11,6 +11,7 @@ namespace DataAccess.Abstract
 {
     public interface IProductDal:IRepositoryBase<Product>
     {
+        public List<ProductForListDto> GetAllProducts();
         List<ProductByCategoryOrSubcategoryDto> GetProductsByCategory(int categoryId);
         List<ProductByCategoryOrSubcategoryDto> GetProductsBySubCategory(int subCategoryId);
     }

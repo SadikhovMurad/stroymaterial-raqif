@@ -15,7 +15,9 @@ namespace Entity.DtoS
         public string Description { get; set; }
         public string Marka { get; set; }
         public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public int SubcategoryId { get; set; }
+        public string SubcategoryName { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int SaleCount { get; set; }
