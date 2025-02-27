@@ -24,7 +24,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=WIN-KEJVO9CLD80\\SQLEXPRESS;Database=EvrostroyDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=WIN-KEJVO9CLD80\\\\SQLEXPRESS;Database=YourDatabaseName;User Id=sa;Password=CM0621_Yr6s;Trusted_Connection=True;");
             }
         }
 
