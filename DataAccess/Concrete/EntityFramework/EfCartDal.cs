@@ -55,6 +55,8 @@ namespace DataAccess.Concrete.EntityFramework
                 context.CartItems.Add(newCartItem);
             }
 
+            cart.TotalPrice = cart.CartItems.Sum(ci => ci.ItemTotalPrice);
+
             // Dəyişiklikləri yadda saxla
             context.SaveChanges();
 

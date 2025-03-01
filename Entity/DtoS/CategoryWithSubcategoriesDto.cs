@@ -10,7 +10,8 @@ namespace Entity.DtoS
 {
     public class CategoryWithSubcategoriesDto : IDto
     {
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public List<string> SubCategories { get; set; }
+        public List<SubcategoryWithCategoryDto> SubCategories { get; set; }
     }
 }

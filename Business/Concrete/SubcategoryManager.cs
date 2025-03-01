@@ -83,7 +83,7 @@ namespace Business.Concrete
 
         public IDataResult<List<SubcategoryWithCategoryDto>> GetSubcategoryWithCategoryName()
         {
-            return new SuccessDataResult<List<SubcategoryWithCategoryDto>>(_subCategoryDal.GetAllWithBaseCategory(), Messages.SubCategoriesListedWithBaseCategory);
+            throw new NotImplementedException();
         }
 
         [ValidationAspect(typeof(SubcategoryValidator))]

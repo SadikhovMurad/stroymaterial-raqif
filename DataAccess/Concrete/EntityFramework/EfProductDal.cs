@@ -37,11 +37,10 @@ namespace DataAccess.Concrete.EntityFramework
                     SubcategoryName = product.SubCategory.Name,
                     Price = product.Price,
                     Quantity = product.Quantity,
-                    SaleCount = 0,
+                    SaleCount = product.SaleCount,
                     Rating = product.Rating,
                     HasStock = product.hasStock,
-                    ImageUrl = product.ImageUrl,
-
+                    ImageUrl = product.ImageUrl
                 });
             }
             return dtoList;

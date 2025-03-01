@@ -14,6 +14,5 @@ namespace Entity.DtoS
         public string Location { get; set; }
         public string PhoneNumber { get; set; }
         public string Notification { get; set; }
-        public decimal TotalAmount { get; set; }
     }
 }

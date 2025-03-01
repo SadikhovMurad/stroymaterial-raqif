@@ -23,6 +23,11 @@ namespace Business.Concrete
             _userDal.Add(user);
         }
 
+        public List<User> GetAll()
+        {
+            return _userDal.GetAll();
+        }
+
         public User GetByMail(string email)
         {
             return _userDal.Get(u=>u.Email == email);

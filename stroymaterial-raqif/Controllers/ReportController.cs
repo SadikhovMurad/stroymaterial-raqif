@@ -19,7 +19,7 @@ namespace stroymaterial_raqif.Controllers
         [HttpGet("DailyReport")]
         public IActionResult GetDailyReports()
         {
-            var result = _reportService.GetDailyReports(DateTime.Now);
+            var result = _reportService.GetDailyReports(DateTime.Now.Date);
             if (result.Success)
             {
                 return Ok(result);

@@ -68,7 +68,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<ModelDbContext>(options => options.UseSqlServer(
 
-    @"Server=localhost\SQLEXPRESS;Database=EvrostroyDB;User Id=sa;Password=CM0621_Yr6s;"
+    @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
 
     ));
 

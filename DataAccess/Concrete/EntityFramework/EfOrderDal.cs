@@ -21,12 +21,38 @@ namespace DataAccess.Concrete.EntityFramework
             _cartDal = cartDal;
         }
 
+        public void ChangeStatus(Guid id)
+        {
+            using var context = new ModelDbContext();
+
+            var order = context.Orders.FirstOrDefault(o => o.Id == id);
+
+            if (order == null)
+            {
+                throw new Exception("Order tapılmadı!");
+            }
+
+            order.IsSuccess = !order.IsSuccess;
+
+            context.SaveChanges();
+        }
+
         public void CreateOrder(OrderDto order, Guid userId)
         {
             using var context = new ModelDbContext();
 
-            var cart = context.Carts.FirstOrDefault(c => c.UserId == userId);
+            var cart = context.Carts
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.Product) // Product-ları da daxil edirik
+                .FirstOrDefault(c => c.UserId == userId);
+
             var user = context.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (cart == null || user == null)
+            {
+                throw new Exception("Cart və ya User tapılmadı!");
+            }
+
             var newOrder = new Order()
             {
                 Cart = cart,
@@ -40,10 +66,45 @@ namespace DataAccess.Concrete.EntityFramework
                 PhoneNumber = user.Email,
                 TotalAmount = cart.TotalPrice
             };
+
             context.Orders.Add(newOrder);
+
+            // 🛠 **Məhsulların `SaleCount` dəyərini artırırıq**
+            foreach (var cartItem in cart.CartItems)
+            {
+                if (cartItem.Product != null)
+                {
+                    cartItem.Product.SaleCount += cartItem.Quantity;
+                }
+            }
+
             context.SaveChanges();
+        }
 
-
+        public List<OrderForListDto> GetAllNotSuccessOrders()
+        {
+            using var context = new ModelDbContext();
+            var orders = context.Orders.Include(o => o.Cart).Include(o => o.User).Where(o => !o.IsSuccess).ToList();
+            var dtos = new List<OrderForListDto>();
+            foreach (var order in orders)
+            {
+                OrderForListDto dto = new OrderForListDto()
+                {
+                    OrderId = order.Id,
+                    CartId = order.CartId,
+                    CartItemDtos = _cartDal.GetAllCartItemsByUserId(order.UserId),
+                    OrderDate = order.OrderDate,
+                    Location = order.Location,
+                    UserEmail = order.User.Email,
+                    UserName = order.User.Firstname,
+                    UserPhoneNumber = order.PhoneNumber,
+                    Notification = order.Notification,
+                    TotalAmount = order.TotalAmount,
+                    Success = order.IsSuccess
+                };
+                dtos.Add(dto);
+            }
+            return dtos;
         }
 
         public List<OrderForListDto> GetAllOrderWithDetails()
@@ -72,6 +133,32 @@ namespace DataAccess.Concrete.EntityFramework
                 orderForListDtos.Add(dto);
             }
             return orderForListDtos;
+        }
+
+        public List<OrderForListDto> GetAllSuccessOrders()
+        {
+            using var context = new ModelDbContext();
+            var orders = context.Orders.Include(o => o.Cart).Include(o => o.User).Where(o => o.IsSuccess).ToList();
+            var dtos = new List<OrderForListDto>();
+            foreach (var order in orders)
+            {
+                OrderForListDto dto = new OrderForListDto()
+                {
+                    OrderId = order.Id,
+                    CartId = order.CartId,
+                    CartItemDtos = _cartDal.GetAllCartItemsByUserId(order.UserId),
+                    OrderDate = order.OrderDate,
+                    Location = order.Location,
+                    UserEmail = order.User.Email,
+                    UserName = order.User.Firstname,
+                    UserPhoneNumber = order.PhoneNumber,
+                    Notification = order.Notification,
+                    TotalAmount = order.TotalAmount,
+                    Success = order.IsSuccess
+                };
+                dtos.Add(dto);
+            }
+            return dtos;
         }
     }
 }

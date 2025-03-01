@@ -13,6 +13,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Order>> GetAll();
         IDataResult<List<OrderForListDto>> GetAllOrderWithDetails();
+        IResult SuccessOrder(Guid id);
         IDataResult<Order> GetById(Guid id);
         IDataResult<Order> GetByFilter<T>(string propertyName, T value);
         IResult Add(OrderDto orderDto,Guid userId);

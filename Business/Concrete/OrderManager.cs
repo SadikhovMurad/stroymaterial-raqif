@@ -7,6 +7,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entity.Concrete;
 using Entity.DtoS;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,12 @@ namespace Business.Concrete
         public IDataResult<Order> GetById(Guid id)
         {
             return new SuccessDataResult<Order>(orderDal.Get(o => o.Id == id), Messages.GetProductById);
+        }
+
+        public IResult SuccessOrder(Guid id)
+        {
+            orderDal.ChangeStatus(id);
+            return new SuccessResult("Okay");
         }
 
         public IResult Update(Guid id, Order? order)

@@ -11,6 +11,6 @@ namespace DataAccess.Abstract
 {
     public interface ISubcategoryDal:IRepositoryBase<SubCategory>
     {
-        List<SubcategoryWithCategoryDto> GetAllWithBaseCategory();
+        //List<SubcategoryWithCategoryDto> GetAllWithBaseCategory();
     }
 }
