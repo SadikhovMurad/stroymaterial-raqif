@@ -18,10 +18,10 @@ namespace stroymaterial_raqif.Controllers
         }
 
         [HttpPost("AddItemToCart/{userId}")]
-        public IActionResult AddItemToCart(Guid userId,Guid productId)
+        public IActionResult AddItemToCart(Guid userId, Guid productId, int count = 1)
         {
-            var result = _cartService.AddItemToCart(userId, productId);
-            if(result.Success)
+            var result = _cartService.AddItemToCart(userId, productId, count);
+            if (result.Success)
             {
                 return Ok(result);
             }
@@ -43,7 +43,7 @@ namespace stroymaterial_raqif.Controllers
         public IActionResult GetCartByUserId(Guid userId)
         {
             var result = _cartService.GetByUserId(userId);
-            if(result.Success)
+            if (result.Success)
             {
                 return Ok(result);
             }

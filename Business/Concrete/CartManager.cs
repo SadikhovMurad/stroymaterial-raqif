@@ -49,9 +49,9 @@ namespace Business.Concrete
             return new SuccessResult("Sebet ugurla yaradildi");
         }
 
-        public IResult AddItemToCart(Guid userId, Guid productId)
+        public IResult AddItemToCart(Guid userId, Guid productId, int count=1)
         {
-            _cartDal.AddItemToCart(userId, productId);
+            _cartDal.AddItemToCart(userId, productId,count);
             return new SuccessResult("Mehsul karta ugurla elave olundu tesekkurler");
         }
 

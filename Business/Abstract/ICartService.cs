@@ -18,7 +18,7 @@ namespace Business.Abstract
         IResult AddCartWithUserId(Guid userId);
         IResult Update(int id, Cart? cart);
         IResult Delete(int id);
-        IResult AddItemToCart(Guid userId,Guid productId);
+        IResult AddItemToCart(Guid userId,Guid productId,int count);
         IResult DeleteItemFromCart(int cartId,CartItem cartItem);
     }
 }

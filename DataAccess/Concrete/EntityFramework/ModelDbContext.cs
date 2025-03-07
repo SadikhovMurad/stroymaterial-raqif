@@ -24,7 +24,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=EvrostroyDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+                optionsBuilder.UseSqlServer("Server=173.214.167.131,1433;Database=EvrostroyDB;User Id=sa;Password=Murad123_;TrustServerCertificate=True;");
             }
         }
 

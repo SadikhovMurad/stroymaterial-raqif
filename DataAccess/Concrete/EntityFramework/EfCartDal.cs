@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCartDal : EfRepositoryBase<Cart, ModelDbContext>, ICartDal
     {
-        public void AddItemToCart(Guid userId,Guid productId)
+        public void AddItemToCart(Guid userId,Guid productId,int count = 1)
         {
             using var context = new ModelDbContext();
 
@@ -38,7 +38,15 @@ namespace DataAccess.Concrete.EntityFramework
             var existingCartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
             if (existingCartItem != null)
             {
-                existingCartItem.Quantity++;
+                if (count > 1)
+                {
+                    existingCartItem.Quantity += count;
+                }
+                else
+                {
+                    existingCartItem.Quantity++;
+                }
+
                 existingCartItem.ItemTotalPrice = (decimal)existingCartItem.Product.Price * existingCartItem.Quantity;
             }
             else

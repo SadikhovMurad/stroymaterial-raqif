@@ -13,7 +13,7 @@ namespace DataAccess.Abstract
     {
         public List<Cart> GetAllCarts(Guid userId);
         public List<CartItemDto> GetAllCartItemsByUserId(Guid userId);
-        public void AddItemToCart(Guid userId,Guid productId);
+        public void AddItemToCart(Guid userId,Guid productId,int count);
         public void DeleteItemFromCart(CartItem item);
         public CartDto GetCartByUserId(Guid userId);
         public void UpdateCartItem(CartItem cartItem);
