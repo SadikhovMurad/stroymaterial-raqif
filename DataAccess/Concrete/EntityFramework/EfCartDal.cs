@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCartDal : EfRepositoryBase<Cart, ModelDbContext>, ICartDal
     {
-        public void AddItemToCart(Guid userId,Guid productId,int count = 1)
+        public void AddItemToCart(Guid userId, Guid productId, int count = 1)
         {
             using var context = new ModelDbContext();
 
@@ -64,10 +64,16 @@ namespace DataAccess.Concrete.EntityFramework
             }
 
             cart.TotalPrice = cart.CartItems.Sum(ci => ci.ItemTotalPrice);
+            cart.IsOrdered = false;
 
             // Dəyişiklikləri yadda saxla
             context.SaveChanges();
 
+        }
+
+        public void DeleteAllCartItemAfterOrder(Guid userId)
+        {
+            throw new NotImplementedException();
         }
 
         public void DeleteItemFromCart(CartItem item)
@@ -81,10 +87,10 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using var context = new ModelDbContext();
 
-            var carts = context.Carts.Include(x => x.CartItems).Where(x=>x.UserId == userId).ToList();
+            var carts = context.Carts.Include(x => x.CartItems).Where(x => x.UserId == userId).ToList();
             List<CartItemDto> cartItemDtos = new List<CartItemDto>();
             var user = context.Users.FirstOrDefault(u => u.Id == userId);
-            
+
             foreach (var item in carts)
             {
                 foreach (var cartItem in item.CartItems)
@@ -114,7 +120,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using var context = new ModelDbContext();
 
-            var carts = context.Carts.Include(x => x.CartItems).Where(c=>c.UserId == userId).ToList();
+            var carts = context.Carts.Include(x => x.CartItems).Where(c => c.UserId == userId).ToList();
             return carts;
         }
 
@@ -126,25 +132,48 @@ namespace DataAccess.Concrete.EntityFramework
            .ThenInclude(ci => ci.Product)
            .FirstOrDefault(c => c.UserId == userId);
             var user = context.Users.FirstOrDefault(u => u.Id == cart.UserId);
-            var dto = new CartDto()
-            {
-                UserId = user.Id,
-                FirstName = user.Firstname,
-                LastName = user.Lastname,
-                email = user.Email,
-                PhoneNumber = user.Email,
-                TotalPrice = cart.CartItems.Sum(c => c.ItemTotalPrice),
-                CartItems = cart.CartItems.Select(ci => new CartAndCartItemDto
-                {
-                    ImageUrl = ci.Product.ImageUrl,
-                    ProductPrice = ci.Product.Price,
-                    ProductName = ci.Product.Name,  // Məhsul adını əlavə et
-                    Quantity = ci.Quantity,
-                    ItemTotalPrice = ci.ItemTotalPrice
-                }).ToList()
-            };
 
-            return dto;
+            if (cart.IsOrdered == true)
+            {
+
+                var dto = new CartDto()
+                {
+                    UserId = user.Id,
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    email = user.Email,
+                    PhoneNumber = user.Email,
+                    TotalPrice = cart.CartItems.Sum(c => c.ItemTotalPrice),
+                    isOrdered = cart.IsOrdered,
+                    cartItemsIsNull = true,
+                    CartItems = null,
+                };
+                return dto;
+            }
+            else
+            {
+
+                var dto = new CartDto()
+                {
+                    UserId = user.Id,
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    email = user.Email,
+                    PhoneNumber = user.Email,
+                    TotalPrice = cart.CartItems.Sum(c => c.ItemTotalPrice),
+                    isOrdered = cart.IsOrdered,
+                    cartItemsIsNull = false,
+                    CartItems = cart.CartItems.Select(ci => new CartAndCartItemDto
+                    {
+                        ImageUrl = ci.Product.ImageUrl,
+                        ProductPrice = ci.Product.Price,
+                        ProductName = ci.Product.Name,  // Məhsul adını əlavə et
+                        Quantity = ci.Quantity,
+                        ItemTotalPrice = ci.ItemTotalPrice
+                    }).ToList()
+                };
+                return dto;
+            }
 
         }
 

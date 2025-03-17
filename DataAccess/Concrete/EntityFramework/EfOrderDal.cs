@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.EntityFramework;
+using Core.Entity.Concrete;
 using DataAccess.Abstract;
 using Entity.Concrete;
 using Entity.DtoS;
@@ -53,6 +54,8 @@ namespace DataAccess.Concrete.EntityFramework
                 throw new Exception("Cart və ya User tapılmadı!");
             }
 
+            
+
             var newOrder = new Order()
             {
                 Cart = cart,
@@ -66,10 +69,11 @@ namespace DataAccess.Concrete.EntityFramework
                 PhoneNumber = user.Email,
                 TotalAmount = cart.TotalPrice
             };
+            
+
 
             context.Orders.Add(newOrder);
-
-            // 🛠 **Məhsulların `SaleCount` dəyərini artırırıq**
+            cart.IsOrdered = true;
             foreach (var cartItem in cart.CartItems)
             {
                 if (cartItem.Product != null)
@@ -111,8 +115,12 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using var context = new ModelDbContext();
 
-            var orders = context.Orders.Include(o => o.Cart).Include(o => o.User).Include(o => o.Cart.CartItems);
+            var orders = context.Orders.Include(o => o.Cart).ThenInclude(c => c.CartItems).Include(o => o.User);
             List<OrderForListDto> orderForListDtos = new List<OrderForListDto>();
+            var cartItemListDtos = new List<CartItemDto>();
+            
+
+            
 
             foreach (var order in orders)
             {

@@ -13,6 +13,7 @@ namespace Entity.Concrete
         public Guid UserId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public decimal TotalPrice { get; set; }
+        public bool IsOrdered { get; set; }
         public ICollection<CartItem> CartItems { get; set; }
     }
 }

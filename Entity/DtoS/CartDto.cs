@@ -16,6 +16,8 @@ namespace Entity.DtoS
         public string email { get; set; }
         public string PhoneNumber { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<CartAndCartItemDto> CartItems { get; set; }
+        public bool isOrdered { get; set; }
+        public bool cartItemsIsNull { get; set; }
+        public List<CartAndCartItemDto>? CartItems { get; set; }
     }
 }
