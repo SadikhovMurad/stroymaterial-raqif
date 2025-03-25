@@ -26,45 +26,22 @@ namespace Business.Concrete
 
         public IResult Add(OrderItemDto orderItemDto)
         {
-            var orderItem = _mapper.Map<OrderItem>(orderItemDto);
-            orderItem.Price = orderItemDto.Quantity * orderItem.Product.Price;
-            _orderItemDal.Add(orderItem);
-            return new SuccessResult(Messages.ProductAddedToCart);
+            throw new NotImplementedException();
         }
 
         public IResult AddQuantity(int id)
         {
-            var orderItem = _orderItemDal.Get(oi => oi.Id == id);
-            if(orderItem == null) 
-            {
-                return new ErrorResult(Messages.ProductNotFound);
-            }
-            var newOrderItem = new OrderItem()
-            {
-                Id = id,
-                ProductId = orderItem.ProductId,
-                Product = orderItem.Product,
-                Quantity = orderItem.Quantity + 1,
-                Price = orderItem.Price
-            };
-            _orderItemDal.Update(newOrderItem);
-            return new SuccessResult(Messages.ProductQuantityAdded);
+            throw new NotImplementedException();
         }
 
         public IResult Delete(int id)
         {
-            var orderItem = _orderItemDal.Get(x => x.Id == id);
-            if (orderItem == null)
-            {
-                return new ErrorResult("Bele id de sebet yoxdur");
-            }
-            _orderItemDal.Delete(orderItem);
-            return new SuccessResult(Messages.ProductRemovedToCart);
+            throw new NotImplementedException();
         }
 
         public IDataResult<List<OrderItem>> GetAll()
         {
-            return new SuccessDataResult<List<OrderItem>>(_orderItemDal.GetAll(), Messages.CategoryListed);
+            throw new NotImplementedException();
         }
 
         public IDataResult<OrderItem> GetByFilter<T>(string propertyName, T value)
@@ -74,13 +51,12 @@ namespace Business.Concrete
 
         public IDataResult<OrderItem> GetById(int id)
         {
-            return new SuccessDataResult<OrderItem>(_orderItemDal.Get(o => o.Id == id), Messages.GetProductById);
+            throw new NotImplementedException();
         }
 
-        public IResult Update(int id, OrderItem? order)
+        public IResult Update(int id, OrderItem? orderItem)
         {
-            _orderItemDal.Update(order);
-            return new SuccessResult(Messages.GetOrder);
+            throw new NotImplementedException();
         }
     }
 }

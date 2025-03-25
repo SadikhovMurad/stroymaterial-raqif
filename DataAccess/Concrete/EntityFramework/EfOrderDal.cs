@@ -45,7 +45,7 @@ namespace DataAccess.Concrete.EntityFramework
             var cart = context.Carts
                 .Include(c => c.CartItems)
                     .ThenInclude(ci => ci.Product)
-                .FirstOrDefault(c => c.UserId == userId && !c.IsOrdered); // Sifariş verilməmiş səbəti tapırıq
+                .FirstOrDefault(c => c.UserId == userId && !c.IsOrdered);
 
             var user = context.Users.FirstOrDefault(u => u.Id == userId);
 
@@ -56,10 +56,10 @@ namespace DataAccess.Concrete.EntityFramework
 
             if (cart.IsOrdered)
             {
-                throw new Exception("Cart'");
+                throw new Exception("Cart artıq sifariş edilib!");
             }
 
-            // Sifariş obyektini yaradırıq
+            // **Sifariş obyektini yaradırıq**
             var newOrder = new Order()
             {
                 Cart = cart,
@@ -71,10 +71,26 @@ namespace DataAccess.Concrete.EntityFramework
                 OrderDate = DateTime.Now.Date,
                 IsSuccess = true,
                 PhoneNumber = user.Email,
-                TotalAmount = cart.TotalPrice
+                TotalAmount = cart.TotalPrice,
+                OrderItems = new List<OrderItem>() // **Boş bir list yaradırıq**
             };
 
             context.Orders.Add(newOrder);
+            context.SaveChanges(); // **Burada SaveChanges çağıraraq Order-in Id-sinin yaradılmasını təmin edirik!**
+
+            // **OrderItems-ı yaradırıq**
+            var orderItems = cart.CartItems.Select(ci => new OrderItem
+            {
+                OrderId = newOrder.Id, // **İndi Order-in ID-si var**
+                ProductId = ci.ProductId,
+                ProductImageUrl = ci.Product.ImageUrl,
+                ProductName = ci.Product.Name,
+                ProductPrice = ci.Product.Price,
+                ItemTotalPrice = ci.ItemTotalPrice,
+                Quantity = ci.Quantity,
+            }).ToList();
+
+            context.OrderItems.AddRange(orderItems); // **Bütün OrderItems-ı bazaya əlavə edirik**
 
             // **Sifariş edilən məhsulların `IsOrderedItem` dəyərini TRUE edirik**
             foreach (var cartItem in cart.CartItems)
@@ -87,40 +103,26 @@ namespace DataAccess.Concrete.EntityFramework
             }
 
             cart.IsOrdered = true; // Səbəti tamamilə sifariş edilmiş kimi işarələyirik
-            context.SaveChanges();
+            cart.CartItems.Clear(); // Səbətin içini təmizləyirik
+
+            context.SaveChanges(); // **Son olaraq bütün dəyişiklikləri bazaya yazırıq**
         }
 
         public List<OrderForListDto> GetAllNotSuccessOrders()
         {
             using var context = new ModelDbContext();
-            var orders = context.Orders.Include(o => o.Cart).Include(o => o.User).Where(o => !o.IsSuccess).ToList();
+            var orders = context.Orders.Include(o => o.Cart).Include(o => o.OrderItems).Include(o=>o.User).Where(o => !o.IsSuccess).ToList();
             var dtos = new List<OrderForListDto>();
-            var cartItemListDtos = new List<CartAndCartItemDto>();
 
 
 
             foreach (var order in orders)
             {
-                foreach (var cartItem in order.Cart.CartItems)
-                {
-                    if (cartItem.IsOrderedItem && cartItem.CartId == order.CartId)
-                    {
-                        cartItemListDtos.Add(new CartAndCartItemDto
-                        {
-                            ProductId = cartItem.ProductId,
-                            ProductName = cartItem.Product.Name,
-                            ProductPrice = cartItem.Product.Price,
-                            ItemTotalPrice = cartItem.ItemTotalPrice,
-                            Quantity = cartItem.Quantity,
-                            ImageUrl = cartItem.Product.ImageUrl
-                        });
-                    }
-                }
                 OrderForListDto dto = new OrderForListDto()
                 {
                     OrderId = order.Id,
                     CartId = order.CartId,
-                    CartItemDtos = cartItemListDtos,
+                    OrderItems = order.OrderItems,
                     OrderDate = order.OrderDate,
                     Location = order.Location,
                     UserEmail = order.User.Email,
@@ -139,31 +141,15 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using var context = new ModelDbContext();
 
-            var orders = context.Orders.Include(o => o.Cart).ThenInclude(c => c.CartItems).ThenInclude(ci => ci.Product).Include(o => o.User);
+            var orders = context.Orders.Include(o=>o.Cart).Include(o=>o.OrderItems).Include(o => o.User);
             List<OrderForListDto> orderForListDtos = new List<OrderForListDto>();
-            var cartItemListDtos = new List<CartAndCartItemDto>();
             foreach (var order in orders)
             {
-                foreach (var cartItem in order.Cart.CartItems)
-                {
-                    if (cartItem.IsOrderedItem && cartItem.CartId == order.CartId)
-                    {
-                        cartItemListDtos.Add(new CartAndCartItemDto
-                        {
-                            ProductId = cartItem.ProductId,
-                            ProductName = cartItem.Product.Name,
-                            ProductPrice = cartItem.Product.Price,
-                            ItemTotalPrice = cartItem.ItemTotalPrice,
-                            Quantity = cartItem.Quantity,
-                            ImageUrl = cartItem.Product.ImageUrl
-                        });
-                    }
-                }
                 OrderForListDto dto = new OrderForListDto()
                 {
                     OrderId = order.Id,
                     CartId = order.CartId,
-                    CartItemDtos = cartItemListDtos,
+                    OrderItems = order.OrderItems,
                     OrderDate = order.OrderDate,
                     Location = order.Location,
                     UserEmail = order.User.Email,
@@ -181,34 +167,18 @@ namespace DataAccess.Concrete.EntityFramework
         public List<OrderForListDto> GetAllSuccessOrders()
         {
             using var context = new ModelDbContext();
-            var orders = context.Orders.Include(o => o.Cart).Include(o => o.User).Where(o => o.IsSuccess).ToList();
+            var orders = context.Orders.Include(o => o.Cart).Include(o => o.OrderItems).Include(o => o.User).Where(o => o.IsSuccess).ToList();
             var dtos = new List<OrderForListDto>();
-            var cartItemListDtos = new List<CartAndCartItemDto>();
 
 
 
             foreach (var order in orders)
             {
-                foreach (var cartItem in order.Cart.CartItems)
-                {
-                    if (cartItem.IsOrderedItem && cartItem.CartId == order.CartId)
-                    {
-                        cartItemListDtos.Add(new CartAndCartItemDto
-                        {
-                            ProductId = cartItem.ProductId,
-                            ProductName = cartItem.Product.Name,
-                            ProductPrice = cartItem.Product.Price,
-                            ItemTotalPrice = cartItem.ItemTotalPrice,
-                            Quantity = cartItem.Quantity,
-                            ImageUrl = cartItem.Product.ImageUrl
-                        });
-                    }
-                }
                 OrderForListDto dto = new OrderForListDto()
                 {
                     OrderId = order.Id,
                     CartId = order.CartId,
-                    CartItemDtos = cartItemListDtos,
+                    OrderItems = order.OrderItems,
                     OrderDate = order.OrderDate,
                     Location = order.Location,
                     UserEmail = order.User.Email,
@@ -228,9 +198,8 @@ namespace DataAccess.Concrete.EntityFramework
             using var context = new ModelDbContext();
 
             var order = context.Orders
-                .Include(o => o.Cart)
-                    .ThenInclude(c => c.CartItems)
-                        .ThenInclude(ci => ci.Product)
+                .Include(o=>o.Cart)
+                .Include(o => o.OrderItems)
                 .Include(o => o.User)
                 .FirstOrDefault(o => o.UserId == userId);
 
@@ -239,30 +208,13 @@ namespace DataAccess.Concrete.EntityFramework
                 return null; // Əgər sifariş yoxdursa, null qaytar
             }
 
-            var cartItemListDtos = new List<CartAndCartItemDto>();
-
-            foreach (var cartItem in order.Cart.CartItems)
-            {
-                if (cartItem.IsOrderedItem && cartItem.CartId == order.CartId)
-                {
-                    cartItemListDtos.Add(new CartAndCartItemDto
-                    {
-                        ProductId = cartItem.ProductId,
-                        ProductName = cartItem.Product.Name,
-                        ProductPrice = cartItem.Product.Price,
-                        ItemTotalPrice = cartItem.ItemTotalPrice,
-                        Quantity = cartItem.Quantity,
-                        ImageUrl = cartItem.Product.ImageUrl
-                    });
-                }
-            }
 
             // Burada düzgün obyektin qaytarılması lazımdır
             return new OrderForListDto()
             {
                 OrderId = order.Id,
                 CartId = order.CartId,
-                CartItemDtos = cartItemListDtos,
+                OrderItems = order.OrderItems,
                 OrderDate = order.OrderDate,
                 Location = order.Location,
                 UserEmail = order.User.Email,

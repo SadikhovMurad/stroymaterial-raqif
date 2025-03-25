@@ -12,7 +12,7 @@ namespace Entity.DtoS
     {
         public Guid OrderId { get; set; }
         public int CartId { get; set; }
-        public List<CartAndCartItemDto> CartItemDtos { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
         public DateTime OrderDate { get; set; }
         public string Location { get; set; }
         public string UserEmail { get; set; }

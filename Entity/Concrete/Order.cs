@@ -13,6 +13,7 @@ namespace Entity.Concrete
         public Guid Id { get; set; }
         public int CartId { get; set; }
         public Cart Cart { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
         public DateTime OrderDate { get; set; }
         public string Location { get; set; }
         public Guid UserId { get; set; }
