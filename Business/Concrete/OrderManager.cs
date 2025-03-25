@@ -62,9 +62,9 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public IDataResult<Order> GetById(Guid id)
+        public IDataResult<OrderForListDto> GetById(Guid id)
         {
-            return new SuccessDataResult<Order>(orderDal.Get(o => o.Id == id), Messages.GetProductById);
+            return new SuccessDataResult<OrderForListDto>(orderDal.GetOrderById(id), Messages.GetProductById);
         }
 
         public IResult SuccessOrder(Guid id)

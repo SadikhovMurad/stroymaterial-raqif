@@ -15,6 +15,7 @@ namespace DataAccess.Abstract
         public List<CartItemDto> GetAllCartItemsByUserId(Guid userId);
         public void AddItemToCart(Guid userId,Guid productId,int count);
         public void DeleteItemFromCart(CartItem item);
+        public void DeleteItemFromCartId(int id);
         public void DeleteAllCartItemAfterOrder(Guid userId);
         public CartDto GetCartByUserId(Guid userId);
         public void UpdateCartItem(CartItem cartItem);

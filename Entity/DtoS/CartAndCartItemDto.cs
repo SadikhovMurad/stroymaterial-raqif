@@ -9,6 +9,8 @@ namespace Entity.DtoS
 {
     public class CartAndCartItemDto:IDto
     {
+        public int CartItemId { get; set; }
+        public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public string ImageUrl { get; set; }
         public decimal ProductPrice { get; set; }

@@ -49,9 +49,9 @@ namespace Business.Concrete
             return new SuccessResult("Sebet ugurla yaradildi");
         }
 
-        public IResult AddItemToCart(Guid userId, Guid productId, int count=1)
+        public IResult AddItemToCart(Guid userId, Guid productId, int count = 1)
         {
-            _cartDal.AddItemToCart(userId, productId,count);
+            _cartDal.AddItemToCart(userId, productId, count);
             return new SuccessResult("Mehsul karta ugurla elave olundu tesekkurler");
         }
 
@@ -60,18 +60,9 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public IResult DeleteItemFromCart(int cartId, CartItem cartItem)
+        public IResult DeleteItemFromCart(int cartId)
         {
-            if (cartItem == null)
-            {
-                return new ErrorResult("Model bosdur.");
-            }
-            var cart = _cartDal.Get(c => c.Id == cartId);
-            if (cart != null)
-            {
-                cart.CartItems.Remove(cartItem);
-            }
-            _cartDal.DeleteItemFromCart(cartItem);
+            _cartDal.DeleteItemFromCartId(cartId);
             return new SuccessResult("Mehsul ugurla sebetden cixarildi");
         }
 

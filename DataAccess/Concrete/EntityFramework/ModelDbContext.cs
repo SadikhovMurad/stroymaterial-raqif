@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
     {
         public ModelDbContext()
         {
-            
+
         }
         public ModelDbContext(DbContextOptions<ModelDbContext> options)
         : base(options)
@@ -90,6 +90,12 @@ namespace DataAccess.Concrete.EntityFramework
                 .HasOne(ci => ci.Product)
                 .WithMany(p => p.CartItems)
                 .HasForeignKey(ci => ci.ProductId);
+
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems)
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             base.OnModelCreating(modelBuilder);

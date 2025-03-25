@@ -28,6 +28,17 @@ namespace stroymaterial_raqif.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("delete/{id}")]
+        public IActionResult DeleteItemFromCart(int id)
+        {
+            var result = _cartService.DeleteItemFromCart(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {

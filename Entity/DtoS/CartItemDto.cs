@@ -18,6 +18,7 @@ namespace Entity.DtoS
         public string ProductName { get; set; }
         public string ImageUrl { get; set; }
         public decimal ProductPrice { get; set; }
+        public bool IsOrderedItem { get; set; }
         public int Quantity { get; set; }
         public decimal ItemTotalPrice { get; set; }
     }

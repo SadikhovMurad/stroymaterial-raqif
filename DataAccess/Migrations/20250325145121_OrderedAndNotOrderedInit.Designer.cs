@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ModelDbContext))]
-    [Migration("20250317165827_Ordered")]
-    partial class Ordered
+    [Migration("20250325145121_OrderedAndNotOrderedInit")]
+    partial class OrderedAndNotOrderedInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,6 +131,9 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("CartId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsOrderedItem")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("ItemTotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -353,9 +356,6 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -366,8 +366,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -498,7 +496,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Entity.Concrete.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Entity.Concrete.Product", "Product")
@@ -552,19 +550,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entity.Concrete.OrderItem", b =>
                 {
-                    b.HasOne("Entity.Concrete.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Entity.Concrete.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

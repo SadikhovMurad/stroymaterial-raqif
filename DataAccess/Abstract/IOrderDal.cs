@@ -14,6 +14,7 @@ namespace DataAccess.Abstract
         void CreateOrder(OrderDto order,Guid userId);
         public List<OrderForListDto> GetAllOrderWithDetails();
         public List<OrderForListDto> GetAllSuccessOrders();
+        public OrderForListDto GetOrderById(Guid userId);
         public List<OrderForListDto> GetAllNotSuccessOrders();
         void ChangeStatus(Guid id);
     }
